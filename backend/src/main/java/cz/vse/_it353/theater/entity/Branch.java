@@ -16,6 +16,7 @@ import java.util.List;
 public class Branch {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+    @Column(unique = true)
     String name;
     String address;
     @OneToMany
