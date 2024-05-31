@@ -33,24 +33,6 @@
 	};
 </script>
 
-<style>
-    form {
-        display: flex;
-        flex-direction: column;
-        width: 300px;
-        margin: auto;
-    }
-
-    label {
-        margin: 10px 0 5px;
-    }
-
-    input, select, button {
-        padding: 8px;
-        margin-bottom: 10px;
-    }
-</style>
-
 <form on:submit|preventDefault={submitForm}>
 	<label for="title">Title:</label>
 	<input id="title" type="text" bind:value={title} required />
