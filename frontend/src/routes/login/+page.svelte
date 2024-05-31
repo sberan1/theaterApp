@@ -1,13 +1,13 @@
 <script>
 	import { goto } from '$app/navigation';
-	import axios from 'axios';
+	import axiosInstance from '$lib/axios.instance.js';
 	import Cookies from 'js-cookie';
 
 	let username = '';
 	let password = '';
 
 	async function login() {
-		const response = await axios.post('http://localhost:8081/login', {
+		const response = await axiosInstance.post('http://localhost:8081/login', {
 			username,
 			password
 		});
@@ -22,8 +22,7 @@
 	async function handleSubmit() {
 		try {
 			const token = await login();
-			Cookies.set('token',  token, { expires: 1 }); // The cookie will expire in 7 days
-			// You can store the token in a cookie or local storage here
+			Cookies.set('token',  token, { expires: new Date(new Date().getTime() + 10 * 60 * 60 * 1000) });
 		} catch (error) {
 			console.error('An error occurred:', error);
 		}
@@ -31,13 +30,20 @@
 </script>
 
 <button on:click={() => goto('/')}>Vrať se zpět</button>
+<div class="container">
 <h1>Přihlášení</h1>
 <form on:submit|preventDefault={handleSubmit}>
-	<label for="username">username:</label>
-	<input id="email" type="text" bind:value={username} required />
 
+	<div class="form-group">
+	<label for="username">Uživatelské jméno:</label>
+	<input id="email" class="form-control" type="text" bind:value={username} required />
+		</div>
+
+		<div class="form-group">
 	<label for="password">Heslo:</label>
-	<input id="password" type="password" bind:value={password} required />
+	<input id="password" class="form-control" type="password" bind:value={password} required />
+		</div>
 
-	<button type="submit">Přihlásit se</button>
+	<button type="submit" class="btn-primary btn">Přihlásit se</button>
 </form>
+</div>
