@@ -6,14 +6,17 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @CrossOrigin
 public class MovieController {
     private final MovieService movieService;
     @GetMapping("/movies")
-    public ResponseEntity<String> getMovies() {
-        return ResponseEntity.ok("Movies");
+    public ResponseEntity<List<Movie>> getMovies() {
+        List<Movie> movies = movieService.findAll();
+        return ResponseEntity.ok(movies);
     }
 
     @PostMapping("/movie")
