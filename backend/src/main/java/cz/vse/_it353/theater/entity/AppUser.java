@@ -29,6 +29,8 @@ public class AppUser implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
     BigDecimal balance;
+    @OneToMany
+    List<Reservation> reservations;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

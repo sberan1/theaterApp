@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,4 +24,6 @@ public class Projection {
     Movie movie;
     @ManyToOne
     Room room;
+    @OneToMany
+    List<Reservation> reservations;
 }
