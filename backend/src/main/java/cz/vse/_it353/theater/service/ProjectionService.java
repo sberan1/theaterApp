@@ -1,5 +1,6 @@
 package cz.vse._it353.theater.service;
 
+import cz.vse._it353.theater.dto.ProjectionDto;
 import cz.vse._it353.theater.repository.MovieRepository;
 import cz.vse._it353.theater.entity.Projection;
 import cz.vse._it353.theater.repository.PriceRepository;
@@ -24,10 +25,13 @@ public class ProjectionService {
     public List<Projection> findByMovieId(String movieId) {
         return projectionRepository.findByMovieId(movieId);
     }
-    public Projection create(Projection projection) {
-        projection.setMovie(movieRepository.findById(projection.getMovie().getId()).orElse(null));
-        projection.setRoom(roomRepository.findById(projection.getRoom().getId()).orElse(null));
-        projection.setPriceType(priceRepository.findById(projection.getPriceType().getId()).orElse(null));
+
+    public Projection create(ProjectionDto projectionDto) {
+        Projection projection = new Projection();
+        projection.setStartTime(projectionDto.getStartTime());
+        projection.setMovie(movieRepository.findById(projectionDto.getMovieId()).orElseThrow());
+        projection.setRoom(roomRepository.findById(projectionDto.getRoomId()).orElseThrow());
+        projection.setPriceType(priceRepository.findById(projectionDto.getPriceTypeId()).orElseThrow());
         return projectionRepository.save(projection);
     }
 }

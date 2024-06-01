@@ -16,7 +16,10 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final BranchRepository branchRepository;
 
-    public List<Room> findAll() {
+    public List<Room> findAll(String branchId) {
+        if (branchId != null) {
+            return roomRepository.findAllByBranchId(branchId);
+        }
         return roomRepository.findAll();
     }
 

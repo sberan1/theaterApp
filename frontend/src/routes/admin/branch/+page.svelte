@@ -54,8 +54,8 @@
 
 	{#if showSuccessDialog}
 		<div class="success-dialog">
-			Room created successfully! <br>
-			Redirecting to admin page...
+			Pobocka vytvorena uspesne <br>
+			Presmerovavam do administrace...
 		</div>
 	{/if}
 	</div>

@@ -1,53 +1,59 @@
 <script>
+	import axiosInstance from '$lib/axios.instance.js';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import axiosInstance from '$lib/axios.instance.js';
-	import { writable } from 'svelte/store';
 
-	let movies = [];
+	let startTime = '';
+	let priceType = '';
+	let movie = '';
+	let room = '';
+	let branch = '';
+	let showModal = false;
 	let branches = [];
-	let newProjection = writable({
-		startTime: '',
-		priceTypeId: '',
-		movieId: '',
-		roomId: ''
+	let rooms = [];
+	let movies = [];
+	let priceTypes = [];
+
+
+	onMount(async () => {
+		const responseBranches = await axiosInstance.get('http://localhost:8081/branches');
+		branches = responseBranches.data;
+
+		const responseMovies = await axiosInstance.get('http://localhost:8081/movies');
+		movies = responseMovies.data;
+
+		const responsePriceTypes = await axiosInstance.get('http://localhost:8081/prices');
+		priceTypes = responsePriceTypes.data;
 	});
 
-	const loadMovies = async () => {
-		try {
-			const response = await axiosInstance.get('/movies');
-			movies = response.data;
-			console.log('Movies loaded:', movies);
-		} catch (error) {
-			console.error('Error loading movies:', error);
-		}
+	const loadRooms = async () => {
+		const response = await axiosInstance.get(`http://localhost:8081/rooms?branchId=${branch}`);
+		rooms = response.data;
 	};
 
-	const loadBranches = async () => {
-		try {
-			const response = await axiosInstance.get('/branches');
-			branches = response.data;
-			console.log('Branches loaded:', branches);
-		} catch (error) {
-			console.error('Error loading branches:', error);
-		}
-	};
+	async function createProjection(projection) {
+		const response = await axiosInstance.post('http://localhost:8081/admin/projection', projection);
 
-	const addProjection = async () => {
-		try {
-			const projection = $newProjection;
-			const response = await axiosInstance.post('/projection', projection);
-			console.log('Projection added:', response.data);
-			goto('/admin');
-		} catch (error) {
-			console.error('Error adding projection:', error);
+		if (response.status !== 200) {
+			throw new Error(`HTTP error! status: ${response.status}`);
 		}
-	};
 
-	onMount(() => {
-		loadMovies();
-		loadBranches();
-	});
+		return response.data;
+	}
+
+	async function handleSubmit() {
+		try {
+			const projection = { startTime, priceTypeId: priceType, movieId: movie, roomId: room };
+			await createProjection(projection);
+			showModal = true;
+			setTimeout(() => {
+				showModal = false;
+				goto('/admin');
+			}, 1500);
+		} catch (error) {
+			console.error('An error occurred:', error);
+		}
+	}
 </script>
 
 <header>
@@ -55,31 +61,61 @@
 		<button on:click={() => goto('/admin')}>Vrať se zpět</button>
 	</nav>
 </header>
+<div class="container">
+	<h1>Create Projection</h1>
+	<form on:submit|preventDefault={handleSubmit}>
+		<div class="form-group">
+			<label for="startTime">Start Time:</label>
+			<input id="startTime" class="form-control" type="datetime-local" bind:value={startTime} required />
+		</div>
 
-<div>
-	<h3>Přidat novou projekci</h3>
-	<form on:submit|preventDefault={addProjection}>
-		<label>
-			Čas začátku:
-			<input type="datetime-local" bind:value={$newProjection.startTime} />
-		</label>
-		<label>
-			Typ ceny:
-			<input type="text" bind:value={$newProjection.priceTypeId} />
-		</label>
-		<label>
-			Film:
-			<select bind:value={$newProjection.movieId}>
-				<option value="">--Vyberte film--</option>
-				{#each movies as movie}
-					<option value={movie.id}>{movie.title}</option>
+		<div class="form-group">
+			<label for="priceType">Price Type:</label>
+			<select id="priceType" class="form-control" bind:value={priceType} required>
+				<option value="">-- Select a price type --</option>
+				{#each priceTypes as priceTypeOption (priceTypeOption.id)}
+					<option value={priceTypeOption.id}>{priceTypeOption.name} | {priceTypeOption.value}</option>
 				{/each}
 			</select>
-		</label>
-		<label>
-			Místnost:
-			<input type="text" bind:value={$newProjection.roomId} />
-		</label>
-		<button type="submit">Přidat projekci</button>
+		</div>
+
+		<div class="form-group">
+			<label for="movie">Movie:</label>
+			<select id="movie" class="form-control" bind:value={movie} required>
+				<option value="">-- Select a movie --</option>
+				{#each movies as movieOption (movieOption.id)}
+					<option value={movieOption.id}>{movieOption.title}</option>
+				{/each}
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="branch">Branch:</label>
+			<select id="branch" class="form-control" bind:value={branch} on:change={loadRooms} required>
+				<option value="">-- Select a branch --</option>
+				{#each branches as branchOption (branchOption.id)}
+					<option value={branchOption.id}>{branchOption.name}</option>
+				{/each}
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="room">Room:</label>
+			<select id="room" class="form-control" bind:value={room} required>
+				<option value="">-- Select a room --</option>
+				{#each rooms as roomOption (roomOption.id)}
+					<option value={roomOption.id}>{roomOption.name}</option>
+				{/each}
+			</select>
+		</div>
+
+		<button type="submit" class="btn btn-primary">Create Projection</button>
 	</form>
+
+	{#if showModal}
+		<div class="success-dialog">
+		  Promitani vytvoreno uspesne <br>
+			Presmerovavam do administrace...
+		</div>
+	{/if}
 </div>

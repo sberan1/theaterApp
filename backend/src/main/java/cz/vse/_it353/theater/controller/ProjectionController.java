@@ -18,14 +18,9 @@ import java.util.List;
 public class ProjectionController {
     private final ProjectionService projectionService;
 
-    @PostMapping("/projection")
+    @PostMapping("/admin/projection")
     public ResponseEntity<Projection> addProjection(@RequestBody ProjectionDto projectionDto) {
-        Projection projection = new Projection();
-        projection.setStartTime(projectionDto.getStartTime());
-        projection.setMovie(new Movie(projectionDto.getMovieId()));
-        projection.setRoom(new Room(projectionDto.getRoomId()));
-        projection.setPriceType(new Price(projectionDto.getPriceTypeId()));
-        return ResponseEntity.ok(projectionService.create(projection));
+        return ResponseEntity.ok(projectionService.create(projectionDto));
     }
     @GetMapping("/projections/{branchId}")
     public ResponseEntity<List<Projection>> getProjectionsByBranch(@PathVariable String branchId) {

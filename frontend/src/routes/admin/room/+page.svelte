@@ -72,8 +72,9 @@
 	</form>
 
 	{#if showModal}
-		<div class="modal">
-			Room created successfully!
+		<div class="success-dialog">
+			Sal vytvoren uspesne <br>
+			Presmerovavam do administrace...
 		</div>
 	{/if}
 </div>

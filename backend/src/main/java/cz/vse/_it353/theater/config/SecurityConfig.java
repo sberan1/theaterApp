@@ -4,6 +4,7 @@ import cz.vse._it353.theater.filter.JwtFilter;
 import cz.vse._it353.theater.service.UserDetailService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,24 +18,42 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
 public class SecurityConfig {
 
     private final UserDetailService userDetailService;
     private final JwtFilter jwtFilter;
+
+    public SecurityConfig(UserDetailService userDetailService, JwtFilter jwtFilter) {
+        this.userDetailService = userDetailService;
+        this.jwtFilter = jwtFilter;
+    }
+
+    @Value("${allowed-cors}")
+    public String cors;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req ->req.requestMatchers("/login/**", "/register/**", "/movie", "/movies", "/projection/**", "/projections/**")
+                        req ->req.requestMatchers("/login/**",
+                                        "/register/**",
+                                        "/rooms" ,
+                                        "/movies",
+                                        "/projection",
+                                        "/projections",
+                                        "/prices")
                                 .permitAll()
-                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                                .requestMatchers("/admin/**", "/user/**").hasAuthority("ADMIN")
                                 .requestMatchers("/user/**").hasAuthority("USER")
-                                .requestMatchers("/user/**").hasAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailService)
