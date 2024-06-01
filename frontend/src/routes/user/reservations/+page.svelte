@@ -61,7 +61,7 @@
 		<tbody>
 		{#each reservations as reservation}
 			<tr>
-				<td>{reservation.projection.movie.title}</td>
+				<td>{reservation.projection.movie ? reservation.projection.movie.title : 'Neznámý film'}</td>
 				<td>{new Date(reservation.projection.startTime).toLocaleString()}</td>
 				<td>{reservation.paid ? 'Ano' : 'Ne'}</td>
 				<td>{reservation.discount}%</td>

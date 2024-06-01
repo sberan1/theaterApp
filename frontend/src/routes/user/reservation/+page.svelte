@@ -39,7 +39,11 @@
 			console.log('Reservation created:', response.data);
 			goto('/');
 		} catch (error) {
-			console.error('Error creating reservation:', error);
+			if (error.response && error.response.status === 409) {
+				alert('The projection has been updated by another transaction. Please refresh and try again.');
+			} else {
+				console.error('Error creating reservation:', error);
+			}
 		}
 	};
 

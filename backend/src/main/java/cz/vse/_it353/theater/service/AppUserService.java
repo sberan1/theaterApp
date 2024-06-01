@@ -15,6 +15,7 @@ public class AppUserService {
     }
 
     public AppUser findByUsername(String username) {
-        return appUserRepository.findByUsername(username);
+        return appUserRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 }

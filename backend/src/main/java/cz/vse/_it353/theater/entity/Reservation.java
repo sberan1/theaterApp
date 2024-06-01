@@ -7,6 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -25,4 +29,10 @@ public class Reservation {
     @Min(1)
     @Max(100)
     Integer discount;
+    @Version
+    private Long version;
+    @UpdateTimestamp
+    LocalDateTime updatedAt;
+    @CreationTimestamp
+    LocalDateTime createdAt;
 }
