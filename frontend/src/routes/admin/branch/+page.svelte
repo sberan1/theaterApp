@@ -1,9 +1,10 @@
-<script>
+<script xmlns="http://www.w3.org/1999/html">
 	import axiosInstance from '$lib/axios.instance.js';
 	import { goto } from '$app/navigation';
 
 	let name = '';
 	let address = '';
+	let showSuccessDialog = false;
 
 	async function createRoom(branch) {
 		const response = await axiosInstance.post('http://localhost:8081/admin/branch', branch);
@@ -19,14 +20,24 @@
 		try {
 			const branch = { name, address };
 			await createRoom(branch);
-			goto('/admin'); // Redirect to admin page after successful creation
+			showSuccessDialog = true;
+			setTimeout(() => {
+				showSuccessDialog = false;
+				goto('/admin');
+			},1500);
 		} catch (error) {
 			console.error('An error occurred:', error);
 		}
 	}
 </script>
+
+<header>
+	<nav>
+		<button on:click={() => goto('/admin')}>Vrať se zpět</button>
+	</nav>
+</header>
 <div class="container">
-	<h1>Create Room</h1>
+	<h1>Vytvorit Pobocku</h1>
 <form on:submit|preventDefault={handleSubmit}>
 	<div class="form-group">
 		<label for="name">Name:</label>
@@ -40,4 +51,11 @@
 
 	<button type="submit" class="btn btn-primary">Create Room</button>
 </form>
+
+	{#if showSuccessDialog}
+		<div class="success-dialog">
+			Pobocka vytvorena uspesne <br>
+			Presmerovavam do administrace...
+		</div>
+	{/if}
 	</div>

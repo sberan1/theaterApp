@@ -2,6 +2,7 @@
 	import axiosInstance from '$lib/axios.instance.js';
 	import { goto } from '$app/navigation';
 	import Cookies from 'js-cookie';
+	import { onMount } from 'svelte';
 
 	let username = '';
 	let password = '';
@@ -32,6 +33,13 @@
 			console.error('An error occurred:', error);
 		}
 	}
+
+	onMount(() => {
+		const token = Cookies.get('token');
+		if (token) {
+			goto('/');
+		}
+	});
 </script>
 
 <button on:click={() => goto('/')}>Vrať se zpět</button>

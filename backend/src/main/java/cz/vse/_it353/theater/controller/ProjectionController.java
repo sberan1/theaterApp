@@ -15,7 +15,7 @@ import java.util.List;
 public class ProjectionController {
     private final ProjectionService projectionService;
 
-    @PostMapping("/projection")
+    @PostMapping("/admin/projection")
     public ResponseEntity<Projection> addProjection(@RequestBody ProjectionDto projectionDto) {
         return ResponseEntity.ok(projectionService.create(projectionDto));
     }
