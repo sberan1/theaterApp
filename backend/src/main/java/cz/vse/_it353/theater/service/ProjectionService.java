@@ -1,5 +1,6 @@
 package cz.vse._it353.theater.service;
 
+import cz.vse._it353.theater.dto.ProjectionDto;
 import cz.vse._it353.theater.entity.Movie;
 import cz.vse._it353.theater.entity.Price;
 import cz.vse._it353.theater.entity.Room;
@@ -35,15 +36,26 @@ public class ProjectionService {
     public List<Projection> findAll() {
         return projectionRepository.findAll();
     }
-    public Projection create(Projection projection) {
-        Movie movie = movieRepository.findById(projection.getMovie().getId()).orElse(null);
-        Room room = roomRepository.findById(projection.getRoom().getId()).orElse(null);
-        Price price = priceRepository.findById(projection.getPriceType().getId()).orElse(null);
+    public List<Projection> getProjections(String filterType, String filterValue) {
+        if ("movie".equalsIgnoreCase(filterType)) {
+            return findByMovieId(filterValue);
+        } else if ("branch".equalsIgnoreCase(filterType)) {
+            return findByBranchId(filterValue);
+        } else {
+            return findAll();
+        }
+    }
+    public Projection create(ProjectionDto projectionDto) {
+        Movie movie = movieRepository.findById(projectionDto.getMovieId()).orElse(null);
+        Room room = roomRepository.findById(projectionDto.getRoomId()).orElse(null);
+        Price price = priceRepository.findById(projectionDto.getPriceTypeId()).orElse(null);
 
         if (movie == null || room == null || price == null) {
             throw new IllegalArgumentException("Movie, Room, or Price not found");
         }
 
+        Projection projection = new Projection();
+        projection.setStartTime(projectionDto.getStartTime());
         projection.setMovie(movie);
         projection.setRoom(room);
         projection.setPriceType(price);
