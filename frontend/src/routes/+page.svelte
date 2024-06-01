@@ -1,50 +1,44 @@
 <script>
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import axiosInstance from '$lib/axios.instance.js';
 
 	let filterType = 'movie';
 	let filterValue = '';
 	let results = [];
 	let movies = [];
-	let theaters = [];
+	let branches = [];
 
 	const loadMovies = async () => {
 		try {
-			const response = await fetch('http://localhost:8081/movies');
-			if (response.ok) {
-				movies = await response.json();
-				console.log('Movies loaded:', movies); // Debugging výpis
-			} else {
-				console.error('Failed to load movies:', response.statusText);
-			}
+			const response = await axiosInstance.get('/movies');
+			movies = response.data;
+			console.log('Movies loaded:', movies); // Debugging výpis
 		} catch (error) {
 			console.error('Error loading movies:', error);
 		}
 	};
 
-	const loadTheaters = async () => {
+	const loadBranches = async () => {
 		try {
-			const response = await fetch('http://localhost:8081/theaters');
-			if (response.ok) {
-				theaters = await response.json();
-				console.log('Theaters loaded:', theaters); // Debugging výpis
-			} else {
-				console.error('Failed to load theaters:', response.statusText);
-			}
+			const response = await axiosInstance.get('/branches');
+			branches = response.data;
+			console.log('Branches loaded:', branches);
 		} catch (error) {
-			console.error('Error loading theaters:', error);
+			console.error('Error loading branches:', error);
 		}
 	};
 
 	const fetchProjections = async () => {
 		try {
-			const response = await fetch(`http://localhost:8081/projections?filterType=${filterType}&filterValue=${filterValue}`);
-			if (response.ok) {
-				results = await response.json();
-				console.log('Projections loaded:', results); // Debugging výpis
-			} else {
-				console.error('Failed to load projections:', response.statusText);
-			}
+			const response = await axiosInstance.get('/projections', {
+				params: {
+					filterType: filterType,
+					filterValue: filterValue
+				}
+			});
+			results = response.data;
+			console.log('Projections loaded:', results);
 		} catch (error) {
 			console.error('Error loading projections:', error);
 		}
@@ -58,7 +52,7 @@
 
 	onMount(() => {
 		loadMovies();
-		loadTheaters();
+		loadBranches();
 	});
 </script>
 
@@ -75,7 +69,7 @@
 		Filtrovat podle:
 		<select bind:value={filterType}>
 			<option value="movie">Film</option>
-			<option value="theater">Kino</option>
+			<option value="branch">Kino</option>
 		</select>
 	</label>
 	{#if filterType === 'movie'}
@@ -93,22 +87,10 @@
 			Vyberte kino:
 			<select bind:value={filterValue} on:change={handleFilterChange}>
 				<option value="">--Vyberte kino--</option>
-				{#each theaters as theater}
-					<option value={theater.id}>{theater.name}</option>
+				{#each branches as branch}
+					<option value={branch.id}>{branch.name}</option>
 				{/each}
 			</select>
 		</label>
 	{/if}
 </div>
-
-<ul>
-	{#each results as result}
-		<li>
-			{#if filterType === 'movie'}
-				{result.theater.name} - {result.timestamp}
-			{:else}
-				{result.movie.title} - {result.timestamp}
-			{/if}
-		</li>
-	{/each}
-</ul>
