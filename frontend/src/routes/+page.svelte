@@ -57,51 +57,60 @@
 </script>
 
 <header>
-	<nav>
-		<button on:click={() => goto('/login')}>Přihlásit se</button>
-		<button on:click={() => goto('/register')}>Zaregistrovat se</button>
-		<button on:click={() => goto('/user/reservation')}>Vytvořit rezervaci</button>
-		<button on:click={() => goto('/user/reservations')}>Moje rezervace</button>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container">
+			<button class="btn btn-primary mr-2" on:click={() => goto('/login')}>Přihlásit se</button>
+			<button class="btn btn-secondary mr-2" on:click={() => goto('/register')}>Zaregistrovat se</button>
+			<button class="btn btn-success mr-2" on:click={() => goto('/user/reservation')}>Vytvořit rezervaci</button>
+			<button class="btn btn-info" on:click={() => goto('/user/reservations')}>Moje rezervace</button>
+		</div>
 	</nav>
 </header>
 
-<div>
-	<label>
-		Filtrovat podle:
-		<select bind:value={filterType}>
+<div class="container mt-4">
+	<div class="form-group">
+		<label for="filterType">Filtrovat podle:</label>
+		<select id="filterType" class="form-control" bind:value={filterType}>
 			<option value="movie">Film</option>
 			<option value="branch">Kino</option>
 		</select>
-	</label>
+	</div>
+
 	{#if filterType === 'movie'}
-		<label>
-			Vyberte film:
-			<select bind:value={filterValue} on:change={handleFilterChange}>
+		<div class="form-group">
+			<label for="filterValueMovie">Vyberte film:</label>
+			<select id="filterValueMovie" class="form-control" bind:value={filterValue} on:change={handleFilterChange}>
 				<option value="">--Vyberte film--</option>
 				{#each movies as movie}
 					<option value={movie.id}>{movie.title}</option>
 				{/each}
 			</select>
-		</label>
+		</div>
 	{:else}
-		<label>
-			Vyberte kino:
-			<select bind:value={filterValue} on:change={handleFilterChange}>
+		<div class="form-group">
+			<label for="filterValueBranch">Vyberte kino:</label>
+			<select id="filterValueBranch" class="form-control" bind:value={filterValue} on:change={handleFilterChange}>
 				<option value="">--Vyberte kino--</option>
 				{#each branches as branch}
 					<option value={branch.id}>{branch.name}</option>
 				{/each}
 			</select>
-		</label>
+		</div>
 	{/if}
 </div>
 
-<ul>
-	{#each results as result}
-		<li>
-			{#if filterType === 'movie'}
-				{result.movie.title} - {result.startTime} - {result.movie.genre} - {result.movie.durationInMinutes} min
-			{/if}
-		</li>
-	{/each}
-</ul>
+<div class="container mt-4">
+	<ul class="list-group">
+		{#each results as result}
+			<li class="list-group-item d-flex justify-content-between align-items-center">
+				<img src={result.movie.coverImageUrl} alt="{result.movie.title}" class="img-thumbnail" style="max-width: 100px; max-height: 100px;"/>
+				<div class="ml-4">
+					<h5>{result.movie.title}</h5>
+					<p>{new Date(result.startTime).toLocaleString()}</p>
+					<p>{result.movie.genre}</p>
+					<p>{result.movie.durationInMinutes} min</p>
+				</div>
+			</li>
+		{/each}
+	</ul>
+</div>

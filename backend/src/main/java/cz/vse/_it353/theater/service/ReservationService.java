@@ -1,5 +1,6 @@
 package cz.vse._it353.theater.service;
 
+import cz.vse._it353.theater.dto.ReservationDto;
 import cz.vse._it353.theater.entity.AppUser;
 import cz.vse._it353.theater.entity.Projection;
 import cz.vse._it353.theater.entity.Reservation;
@@ -21,17 +22,17 @@ public class ReservationService {
     private final AppUserRepository appUserRepository;
 
     @Transactional
-    public Reservation createReservation(String username, String projectionId, boolean isPaid, int discount) {
-        AppUser user = appUserRepository.findByUsername(username)
+    public Reservation createReservation(ReservationDto reservationDto) {
+        AppUser user = appUserRepository.findByUsername(reservationDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Projection projection = projectionRepository.findById(projectionId)
+        Projection projection = projectionRepository.findById(reservationDto.getProjectionId())
                 .orElseThrow(() -> new IllegalArgumentException("Projection not found"));
 
         Reservation reservation = new Reservation();
         reservation.setUser(user);
         reservation.setProjection(projection);
-        reservation.setPaid(isPaid);
-        reservation.setDiscount(discount);
+        reservation.setPaid(reservationDto.isPaid());
+        reservation.setDiscount(reservationDto.getDiscount());
 
         try {
             return reservationRepository.save(reservation);
@@ -42,4 +43,5 @@ public class ReservationService {
     public List<Reservation> findByUsername(String username) {
         return reservationRepository.findAllByUserUsername(username);
     }
+
 }

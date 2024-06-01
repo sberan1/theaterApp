@@ -20,13 +20,7 @@ public class ReservationController {
     @PostMapping("/reservation")
     public ResponseEntity<?> createReservation(@RequestBody ReservationDto reservationDto) {
         try {
-            Reservation reservation = reservationService.createReservation(
-                    reservationDto.getUsername(),
-                    reservationDto.getProjectionId(),
-                    reservationDto.isPaid(),
-                    reservationDto.getDiscount()
-            );
-            return ResponseEntity.ok(reservation);
+            return ResponseEntity.ok(reservationService.createReservation(reservationDto));
         } catch (OptimisticLockException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("The projection has been updated by another transaction. Please refresh and try again.");
         }
