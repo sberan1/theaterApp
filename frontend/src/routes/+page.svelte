@@ -2,13 +2,11 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import axiosInstance from '$lib/axios.instance.js';
-
 	let filterType = 'movie';
 	let filterValue = '';
 	let results = [];
 	let movies = [];
 	let branches = [];
-
 	const loadMovies = async () => {
 		try {
 			const response = await axiosInstance.get('/movies');
@@ -18,7 +16,6 @@
 			console.error('Error loading movies:', error);
 		}
 	};
-
 	const loadBranches = async () => {
 		try {
 			const response = await axiosInstance.get('/branches');
@@ -28,7 +25,6 @@
 			console.error('Error loading branches:', error);
 		}
 	};
-
 	const fetchProjections = async () => {
 		try {
 			const response = await axiosInstance.get('/projections', {
@@ -43,13 +39,11 @@
 			console.error('Error loading projections:', error);
 		}
 	};
-
 	const handleFilterChange = async () => {
 		if (filterValue) {
 			await fetchProjections();
 		}
 	};
-
 	onMount(() => {
 		loadMovies();
 		loadBranches();
@@ -61,9 +55,9 @@
 		<button on:click={() => goto('/login')}>Přihlásit se</button>
 		<button on:click={() => goto('/register')}>Zaregistrovat se</button>
 		<button on:click={() => goto('/reservation')}>Vytvořit rezervaci</button>
+		<button on:click={() => goto('/projection')}>Vytvořit projekci</button>
 	</nav>
 </header>
-
 <div>
 	<label>
 		Filtrovat podle:
