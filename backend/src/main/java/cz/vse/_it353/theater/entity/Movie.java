@@ -23,4 +23,7 @@ public class Movie {
     Integer durationInMinutes;
     String rating;
     String genre;
+    public Movie(String id) {
+        this.id = id;
+    }
 }

@@ -36,7 +36,7 @@
 	const addProjection = async () => {
 		try {
 			const projection = $newProjection;
-			const response = await axiosInstance.post('/projections', projection);
+			const response = await axiosInstance.post('/projection', projection);
 			console.log('Projection added:', response.data);
 			goto('/');
 		} catch (error) {

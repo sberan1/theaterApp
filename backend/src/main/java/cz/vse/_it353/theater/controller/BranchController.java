@@ -27,9 +27,4 @@ public class BranchController {
     public ResponseEntity<Branch> addBranch(@RequestBody Branch branch) {
         return ResponseEntity.ok(branchService.create(branch));
     }
-    @GetMapping("/branches/{branchId}/projections")
-    public ResponseEntity<List<Projection>> getProjectionsByBranch(@PathVariable String branchId) {
-        List<Projection> projections = projectionService.findByBranchId(branchId);
-        return ResponseEntity.ok(projections);
-    }
 }

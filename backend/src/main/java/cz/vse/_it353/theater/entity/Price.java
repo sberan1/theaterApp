@@ -21,4 +21,7 @@ public class Price {
     String id;
     String name;
     BigDecimal value;
+    public Price(String id) {
+        this.id = id;
+    }
 }

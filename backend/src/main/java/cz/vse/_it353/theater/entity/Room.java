@@ -18,4 +18,7 @@ public class Room {
     Integer capacity;
     @ManyToOne
     Branch branch;
+    public Room(String id) {
+        this.id = id;
+    }
 }
