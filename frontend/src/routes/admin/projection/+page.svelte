@@ -38,7 +38,7 @@
 			const projection = $newProjection;
 			const response = await axiosInstance.post('/projection', projection);
 			console.log('Projection added:', response.data);
-			goto('/');
+			goto('/admin');
 		} catch (error) {
 			console.error('Error adding projection:', error);
 		}
@@ -52,7 +52,7 @@
 
 <header>
 	<nav>
-		<button on:click={() => goto('/')}>Vrať se zpět</button>
+		<button on:click={() => goto('/admin')}>Vrať se zpět</button>
 	</nav>
 </header>
 
