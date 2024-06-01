@@ -23,6 +23,7 @@
 		try {
 			const token = await login();
 			Cookies.set('token',  token, { expires: new Date(new Date().getTime() + 10 * 60 * 60 * 1000) });
+			await goto('/');
 		} catch (error) {
 			console.error('An error occurred:', error);
 		}

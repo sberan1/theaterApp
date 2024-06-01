@@ -23,7 +23,7 @@ public class BranchController {
         return ResponseEntity.ok(branches);
     }
 
-    @PostMapping("/branch")
+    @PostMapping("/admin/branch")
     public ResponseEntity<Branch> addBranch(@RequestBody Branch branch) {
         return ResponseEntity.ok(branchService.create(branch));
     }

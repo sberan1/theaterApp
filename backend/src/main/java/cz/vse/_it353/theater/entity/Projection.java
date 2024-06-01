@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,4 +28,8 @@ public class Projection {
     Room room;
     @OneToMany
     List<Reservation> reservations;
+    @UpdateTimestamp
+    LocalDateTime updatedAt;
+    @CreationTimestamp
+    LocalDateTime createdAt;
 }
