@@ -19,7 +19,7 @@ public class MovieController {
         return ResponseEntity.ok(movies);
     }
 
-    @PostMapping("/movie")
+    @PostMapping("/admin/movie")
     public ResponseEntity<Movie> addMovie(@RequestBody Movie movie) {
         return ResponseEntity.ok(movieService.create(movie));
     }

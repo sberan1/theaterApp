@@ -36,9 +36,7 @@ public class SecurityConfig {
         this.userDetailService = userDetailService;
         this.jwtFilter = jwtFilter;
     }
-
-    @Value("${allowed-cors}")
-    public String cors;
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
