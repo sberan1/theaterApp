@@ -1,7 +1,7 @@
 package cz.vse._it353.theater.service;
 
 import cz.vse._it353.theater.entity.Movie;
-import cz.vse._it353.theater.entity.MovieRepository;
+import cz.vse._it353.theater.repository.MovieRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
