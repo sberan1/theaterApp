@@ -8,4 +8,5 @@ import java.util.List;
 public interface ProjectionRepository extends JpaRepository<Projection, String> {
     List<Projection> findByRoomBranchId(String branchId);
     List<Projection> findByMovieId(String movieId);
+    List<Projection> findAll();
 }

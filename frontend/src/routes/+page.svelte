@@ -61,6 +61,7 @@
 		<button on:click={() => goto('/login')}>Přihlásit se</button>
 		<button on:click={() => goto('/register')}>Zaregistrovat se</button>
 		<button on:click={() => goto('/user/reservation')}>Vytvořit rezervaci</button>
+		<button on:click={() => goto('/user/reservations')}>Moje rezervace</button>
 	</nav>
 </header>
 

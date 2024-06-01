@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @CrossOrigin
@@ -16,11 +18,16 @@ public class ReservationController {
     @PostMapping("/reservation")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
         Reservation reservation = reservationService.createReservation(
-                reservationDto.getUserId(),
+                reservationDto.getUsername(),
                 reservationDto.getProjectionId(),
                 reservationDto.isPaid(),
                 reservationDto.getDiscount()
         );
         return ResponseEntity.ok(reservation);
+    }
+    @GetMapping("/reservations")
+    public ResponseEntity<List<Reservation>> getReservations(@RequestParam String username) {
+        List<Reservation> reservations = reservationService.findByUsername(username);
+        return ResponseEntity.ok(reservations);
     }
 }

@@ -4,8 +4,6 @@
 	import axiosInstance from '$lib/axios.instance.js';
 	import Cookies from 'js-cookie';
 
-	let filterType = 'movie';
-	let filterValue = '';
 	let projections = [];
 	let selectedProjection = '';
 	let isPaid = false;
@@ -13,15 +11,7 @@
 
 	const loadProjections = async () => {
 		try {
-			const response = await axiosInstance.get('/projections', {
-				params: {
-					filterType: filterType,
-					filterValue: filterValue
-				},
-				headers: {
-					Authorization: `Bearer ${Cookies.get('token')}`
-				}
-			});
+			const response = await axiosInstance.get('/projections');
 			projections = response.data;
 			console.log('Projections loaded:', projections);
 		} catch (error) {
@@ -32,14 +22,10 @@
 	const createReservation = async () => {
 		try {
 			const token = Cookies.get('token');
-			if (!token) {
-				await goto('/login');
-				return;
-			}
 			const user = await parseJwt(token);
 
 			const reservationData = {
-				userId: user.id,
+				username: user.sub,  // Use username from token
 				projectionId: selectedProjection,
 				paid: isPaid,
 				discount
@@ -47,7 +33,7 @@
 
 			const response = await axiosInstance.post('/reservation', reservationData, {
 				headers: {
-					Authorization: `Bearer ${token}`
+					'Authorization': `Bearer ${token}`
 				}
 			});
 			console.log('Reservation created:', response.data);
@@ -84,9 +70,15 @@
 			<select bind:value={selectedProjection}>
 				<option value="">--Vyberte projekci--</option>
 				{#each projections as projection}
-					<option value={projection.id}>
-						{projection.movie.title} - {projection.startTime}
-					</option>
+					{#if projection.movie && projection.movie.title}
+						<option value={projection.id}>
+							{projection.movie.title} - {projection.startTime}
+						</option>
+					{:else}
+						<option value={projection.id}>
+							Neznámý film - {projection.startTime}
+						</option>
+					{/if}
 				{/each}
 			</select>
 		</label>

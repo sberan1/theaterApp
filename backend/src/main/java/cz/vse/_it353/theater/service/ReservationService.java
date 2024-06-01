@@ -8,6 +8,7 @@ import cz.vse._it353.theater.repository.ReservationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,8 +18,15 @@ public class ReservationService {
     private final AppUserService appUserService;
     private final ProjectionRepository projectionRepository;
 
-    public Reservation createReservation(String userId, String projectionId, boolean paid, Integer discount) {
-        AppUser user = appUserService.findById(userId);
+    public Reservation createReservation(String username, String projectionId, boolean paid, Integer discount) {
+        if (username == null) {
+            throw new IllegalArgumentException("User ID must not be null");
+        }
+        if(projectionId == null) {
+            throw new IllegalArgumentException("Projection ID must not be null");
+        }
+
+        AppUser user = appUserService.findByUsername(username);
         Optional<Projection> projection = projectionRepository.findById(projectionId);
 
         if (user != null && projection.isPresent()) {
@@ -31,5 +39,8 @@ public class ReservationService {
         } else {
             throw new IllegalArgumentException("User or projection not found");
         }
+    }
+    public List<Reservation> findByUsername(String username) {
+        return reservationRepository.findAllByUserUsername(username);
     }
 }

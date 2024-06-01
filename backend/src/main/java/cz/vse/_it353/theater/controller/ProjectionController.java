@@ -34,17 +34,17 @@ public class ProjectionController {
     }
     @GetMapping("/projections")
     public ResponseEntity<List<Projection>> getProjections(
-            @RequestParam String filterType,
-            @RequestParam String filterValue) {
+            @RequestParam(required = false) String filterType,
+            @RequestParam(required = false) String filterValue) {
         List<Projection> projections;
         if ("movie".equalsIgnoreCase(filterType)) {
             projections = projectionService.findByMovieId(filterValue);
         } else if ("branch".equalsIgnoreCase(filterType)) {
             projections = projectionService.findByBranchId(filterValue);
         } else {
-            projections = List.of();
+            projections = projectionService.findAll();
         }
-        System.out.println("Projections fetched: " + projections);  // Přidejte tento řádek
+        System.out.println("Projections fetched: " + projections);
         return ResponseEntity.ok(projections);
     }
 }
