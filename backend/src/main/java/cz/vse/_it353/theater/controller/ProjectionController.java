@@ -44,6 +44,7 @@ public class ProjectionController {
         } else {
             projections = List.of();
         }
+        System.out.println("Projections fetched: " + projections);  // Přidejte tento řádek
         return ResponseEntity.ok(projections);
     }
 }

@@ -60,8 +60,7 @@
 	<nav>
 		<button on:click={() => goto('/login')}>Přihlásit se</button>
 		<button on:click={() => goto('/register')}>Zaregistrovat se</button>
-		<button on:click={() => goto('/reservation')}>Vytvořit rezervaci</button>
-		<button on:click={() => goto('/projection')}>Přidat projekci</button>
+		<button on:click={() => goto('/user/reservation')}>Vytvořit rezervaci</button>
 	</nav>
 </header>
 
@@ -99,7 +98,7 @@
 <ul>
 	{#each results as result}
 		<li>
-			{#if filterType === 'branch'}
+			{#if filterType === 'movie'}
 				{result.movie.title} - {result.startTime} - {result.movie.genre} - {result.movie.durationInMinutes} min
 			{/if}
 		</li>
