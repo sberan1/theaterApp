@@ -24,8 +24,7 @@ public class ProjectionController {
     }
     @GetMapping("/projections/{branchId}")
     public ResponseEntity<List<Projection>> getProjectionsByBranch(@PathVariable String branchId) {
-        List<Projection> projections = projectionService.findByBranchId(branchId);
-        return ResponseEntity.ok(projections);
+        return ResponseEntity.ok(projectionService.findByBranchId(branchId));
     }
     @GetMapping("/projections")
     public ResponseEntity<List<Projection>> getProjections(

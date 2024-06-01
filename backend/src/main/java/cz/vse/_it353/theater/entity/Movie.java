@@ -25,6 +25,7 @@ public class Movie {
     Integer durationInMinutes;
     String rating;
     String genre;
+    String coverImageUrl;
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp
