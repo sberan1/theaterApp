@@ -2,6 +2,7 @@
 	import axiosInstance from '$lib/axios.instance.js';
 	import { onMount } from 'svelte';
 	import SeatGrid from '$lib/components/SeatGrid.svelte';
+	import { goto } from '$app/navigation';
 
 	let seats = [];
 	let branches = [];
@@ -46,9 +47,14 @@ const seatPlan = async () => {
 
 	const handleRoomChange = async () => {
 		await seatPlan()
-		console.log(groupedSeats);
 	};
 </script>
+
+<header>
+	<nav>
+		<button on:click={() => goto('/admin')}> Vrať se zpět</button>
+	</nav>
+</header>
 
 <div class="container">
 	<h1>Plán sedadel</h1>

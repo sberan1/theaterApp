@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -25,6 +26,8 @@ public class Reservation {
     AppUser user;
     @ManyToOne
     Projection projection;
+    @ManyToMany
+    List<Seat> seats;
     boolean paid;
     @Min(1)
     @Max(100)
