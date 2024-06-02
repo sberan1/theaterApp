@@ -14,4 +14,5 @@ public class ProjectionDto {
     private String movieId;
     private String priceTypeId;
     private String roomId;
+    private Long version;
 }

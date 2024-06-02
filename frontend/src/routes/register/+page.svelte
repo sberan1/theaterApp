@@ -9,6 +9,7 @@
 	let email = '';
 	let phoneNumber = '';
 	let confirmPassword = '';
+	let showModal = false;
 
 	async function register(user) {
 		const response = await axiosInstance.post('http://localhost:8081/register', user);
@@ -29,6 +30,11 @@
 			const user = { username, password, email, phoneNumber };
 			const token = await register(user);
 			Cookies.set('token', token, { expires: new Date(new Date().getTime() + 10 * 60 * 60 * 1000) });
+			showModal = true;
+			setTimeout(() => {
+				showModal = false;
+				goto('/admin');
+			}, 1000);
 		} catch (error) {
 			console.error('An error occurred:', error);
 		}
@@ -72,5 +78,12 @@
 	</div>
 
 	<button type="submit" class="btn btn-primary">Zaregistrovat se</button>
+
+	{#if showModal}
+		<div class="alert alert-success" role="alert">
+			Registrace proběhla úspěšně
+		</div>
+	{/if}
+
 </form>
 </div>

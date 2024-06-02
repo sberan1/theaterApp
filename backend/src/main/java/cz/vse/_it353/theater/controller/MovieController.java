@@ -1,5 +1,6 @@
 package cz.vse._it353.theater.controller;
 
+import cz.vse._it353.theater.dto.CreateMovieDto;
 import cz.vse._it353.theater.entity.Movie;
 import cz.vse._it353.theater.service.MovieService;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ public class MovieController {
     }
 
     @PostMapping("/admin/movie")
-    public ResponseEntity<Movie> addMovie(@RequestBody Movie movie) {
+    public ResponseEntity<Movie> addMovie(@RequestBody CreateMovieDto movie) {
         return ResponseEntity.ok(movieService.create(movie));
     }
 }

@@ -1,6 +1,7 @@
 package cz.vse._it353.theater.controller;
 
 import cz.vse._it353.theater.dto.AuthenticationResponse;
+import cz.vse._it353.theater.dto.LoginUserDto;
 import cz.vse._it353.theater.dto.RegisterUserDto;
 import cz.vse._it353.theater.entity.AppUser;
 import cz.vse._it353.theater.service.AuthService;
@@ -20,7 +21,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(
-            @RequestBody AppUser user
+            @RequestBody LoginUserDto user
     ) {
         return ResponseEntity.ok(authService.login(user));
     }

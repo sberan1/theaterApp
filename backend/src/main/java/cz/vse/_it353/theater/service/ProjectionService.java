@@ -52,4 +52,19 @@ public class ProjectionService {
     public Optional<Projection> findById(String id) {
         return projectionRepository.findById(id);
     }
+
+    public void deleteById(String id) {
+        projectionRepository.deleteById(id);
+    }
+
+    public List<Projection> updateProjection(String id, ProjectionDto projectionDto) {
+        Projection projection = projectionRepository.findById(id).orElseThrow();
+        projection.setStartTime(projectionDto.getStartTime());
+        projection.setMovie(movieRepository.findById(projectionDto.getMovieId()).orElseThrow());
+        projection.setRoom(roomRepository.findById(projectionDto.getRoomId()).orElseThrow());
+        projection.setPriceType(priceRepository.findById(projectionDto.getPriceTypeId()).orElseThrow());
+        projection.setVersion(projectionDto.getVersion());
+        projectionRepository.save(projection);
+        return projectionRepository.findAll();
+    }
 }

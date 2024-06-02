@@ -38,6 +38,8 @@ public class Projection {
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "projection", cascade = CascadeType.ALL)
     @JsonBackReference
     List<Reservation> reservations = new ArrayList<>();
+    @Version
+    private Long version;
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp

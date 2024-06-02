@@ -42,4 +42,15 @@ public class ProjectionController {
     public ResponseEntity<Projection> getProjectionById(@PathVariable String id) {
         return ResponseEntity.ok(projectionService.findById(id).orElseThrow());
     }
+
+    @DeleteMapping("/admin/projection/{id}")
+    public ResponseEntity<Void> deleteProjection(@PathVariable String id) {
+        projectionService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/admin/projection/{id}")
+    public ResponseEntity<List<Projection>> updateProjection(@PathVariable String id, @RequestBody ProjectionDto projectionDto) {
+        return ResponseEntity.ok(projectionService.updateProjection(id, projectionDto));
+    }
 }

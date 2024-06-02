@@ -1,5 +1,6 @@
 package cz.vse._it353.theater.controller;
 
+import cz.vse._it353.theater.dto.CreateBranchDto;
 import cz.vse._it353.theater.entity.Branch;
 import cz.vse._it353.theater.entity.Projection;
 import cz.vse._it353.theater.service.BranchService;
@@ -24,7 +25,7 @@ public class BranchController {
     }
 
     @PostMapping("/admin/branch")
-    public ResponseEntity<Branch> addBranch(@RequestBody Branch branch) {
+    public ResponseEntity<Branch> addBranch(@RequestBody CreateBranchDto branch) {
         return ResponseEntity.ok(branchService.create(branch));
     }
 }

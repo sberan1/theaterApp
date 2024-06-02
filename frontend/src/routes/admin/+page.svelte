@@ -7,13 +7,14 @@ import axiosInstance from '$lib/axios.instance.js';
 let sortBy = 'startTime';
 let page = 0;
 let limit = 20;
-function handleEdit(id) {
-	goto(`/admin/projection/${id}`);
+const handleEdit = async (id) =>  {
+	goto(`/admin/projection?id=${id}`);
 }
 
-async function handleDelete(id) {
+const handleDelete = async (id) => {
 	try {
-		await axiosInstance.delete(`/projection/${id}`)
+		await axiosInstance.delete(`/admin/projection/${id}`)
+		await loadData();
 	} catch (e) {
 		alert('Failed to delete projection');
 	}
