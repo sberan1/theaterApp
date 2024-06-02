@@ -47,7 +47,8 @@ public class SecurityConfig {
                                         "/movies",
                                         "/projection",
                                         "/projections",
-                                        "/prices")
+                                        "/prices",
+                                        "/branches")
                                 .permitAll()
                                 .requestMatchers("/admin/**", "/user/**").hasAuthority("ADMIN")
                                 .requestMatchers("/user/**").hasAuthority("USER")

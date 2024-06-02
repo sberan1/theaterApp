@@ -1,13 +1,18 @@
 <script>
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { writable } from 'svelte/store';
 	import axiosInstance from '$lib/axios.instance.js';
+	import Cookies from 'js-cookie';
 
 	let filterType = 'movie';
 	let filterValue = '';
 	let results = [];
 	let movies = [];
 	let branches = [];
+	let loading = writable(false); // Stav načítání
+	let username = ''; // Ukládá uživatelské jméno
+	let loggedIn = writable(false); // Stav přihlášení
 
 	const loadMovies = async () => {
 		try {
@@ -31,6 +36,7 @@
 
 	const fetchProjections = async () => {
 		try {
+			loading.set(true); // Nastavení stavu načítání na true
 			const response = await axiosInstance.get('/projections', {
 				params: {
 					filterType: filterType,
@@ -41,6 +47,8 @@
 			console.log('Projections loaded:', results);
 		} catch (error) {
 			console.error('Error loading projections:', error);
+		} finally {
+			loading.set(false); // Nastavení stavu načítání na false
 		}
 	};
 
@@ -50,19 +58,59 @@
 		}
 	};
 
+	const checkLogin = async () => {
+		const token = Cookies.get('token');
+		if (token) {
+			try {
+				const user = await parseJwt(token);
+				username = user.sub;
+				loggedIn.set(true);
+			} catch (error) {
+				console.error('Error parsing token:', error);
+			}
+		}
+	};
+
+	const logout = () => {
+		Cookies.remove('token'); // Odstranění tokenu
+		loggedIn.set(false);
+		username = '';
+		goto('/login'); // Přesměrování na přihlašovací stránku
+	};
+
+	async function parseJwt(token) {
+		const base64Url = token.split('.')[1];
+		const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+		const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+			return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+		}).join(''));
+
+		return JSON.parse(jsonPayload);
+	}
+
 	onMount(() => {
 		loadMovies();
 		loadBranches();
+		checkLogin();
 	});
 </script>
 
 <header>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<div class="container">
-			<button class="btn btn-primary mr-2" on:click={() => goto('/login')}>Přihlásit se</button>
-			<button class="btn btn-secondary mr-2" on:click={() => goto('/register')}>Zaregistrovat se</button>
-			<button class="btn btn-success mr-2" on:click={() => goto('/user/reservation')}>Vytvořit rezervaci</button>
-			<button class="btn btn-info" on:click={() => goto('/user/reservations')}>Moje rezervace</button>
+		<div class="container d-flex justify-content-between align-items-center">
+			<div>
+				{#if $loggedIn}
+					<span class="navbar-text mr-3">
+						<i class="fas fa-user-circle"></i> {username}
+					</span>
+					<button class="btn btn-danger mr-2" on:click={logout}>Odhlásit se</button>
+				{:else}
+					<button class="btn btn-primary mr-2" on:click={() => goto('/login')}>Přihlásit se</button>
+					<button class="btn btn-secondary mr-2" on:click={() => goto('/register')}>Zaregistrovat se</button>
+				{/if}
+				<button class="btn btn-success mr-2" on:click={() => goto('/user/reservation')}>Vytvořit rezervaci</button>
+				<button class="btn btn-info" on:click={() => goto('/user/reservations')}>Moje rezervace</button>
+			</div>
 		</div>
 	</nav>
 </header>
@@ -100,17 +148,29 @@
 </div>
 
 <div class="container mt-4">
-	<ul class="list-group">
-		{#each results as result}
-			<li class="list-group-item d-flex justify-content-between align-items-center">
-				<img src={result.movie.coverImageUrl} alt="{result.movie.title}" class="img-thumbnail" style="max-width: 100px; max-height: 100px;"/>
-				<div class="ml-4">
-					<h5>{result.movie.title}</h5>
-					<p>{new Date(result.startTime).toLocaleString()}</p>
-					<p>{result.movie.genre}</p>
-					<p>{result.movie.durationInMinutes} min</p>
-				</div>
-			</li>
-		{/each}
-	</ul>
+	{#if $loading}
+		<p>Načítání...</p>
+	{:else if results.length > 0}
+		<ul class="list-group">
+			{#each results as result}
+				<li class="list-group-item d-flex justify-content-between align-items-center">
+					<img src={result.movie.coverImageUrl} alt="{result.movie.title}" class="img-thumbnail" style="max-width: 100px; max-height: 100px;"/>
+					<div class="ml-4">
+						<h5>{result.movie.title}</h5>
+						<p>{new Date(result.startTime).toLocaleString()}</p>
+						<p>{result.movie.genre}</p>
+						<p>{result.movie.durationInMinutes} min</p>
+					</div>
+				</li>
+			{/each}
+		</ul>
+	{:else}
+		<p>Tento film se momentálně nevysílá.</p>
+	{/if}
 </div>
+
+<style>
+    .navbar-text {
+        font-size: 1.25rem;
+    }
+</style>
