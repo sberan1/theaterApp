@@ -26,6 +26,8 @@ public class Reservation {
     AppUser user;
     @ManyToOne
     Projection projection;
+    @ManyToMany
+    List<Seat> seats;
     boolean paid;
     @Min(1)
     @Max(100)
