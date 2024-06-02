@@ -24,7 +24,7 @@ public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "room_id")
     @JsonBackReference
     Room room;

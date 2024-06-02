@@ -23,15 +23,15 @@ public class Projection {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     LocalDateTime startTime;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "price_type_id")
     @JsonManagedReference
     Price priceType;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "movie_id")
     @JsonManagedReference
     Movie movie;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "room_id")
     @JsonManagedReference
     Room room;

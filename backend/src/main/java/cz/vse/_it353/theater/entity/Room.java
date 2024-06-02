@@ -24,7 +24,7 @@ public class Room {
     String id;
     String name;
     Integer capacity;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "branch_id")
     @JsonManagedReference
     Branch branch;
