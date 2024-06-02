@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import axiosInstance from '$lib/axios.instance';
 	import { writable } from 'svelte/store';
 	import Cookies from 'js-cookie';
@@ -69,7 +70,8 @@
 			Ztráta připojení k serveru. Zkontrolujte své připojení k internetu.
 		</div>
 	{/if}
-	<header>
+	{#if $page.route.id}
+	<header class="{$page.route.id ?? ''}">
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container d-flex justify-content-between align-items-center">
 				<div>
@@ -87,5 +89,6 @@
 			</div>
 		</nav>
 	</header>
+	{/if}
 	<slot/>
 {/if}
