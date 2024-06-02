@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,10 +23,11 @@ public class Room {
     String name;
     Integer capacity;
     @ManyToOne
+    @JoinColumn(name = "branch_id")
     Branch branch;
-    @OneToMany
-    List<Projection> projections;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "room")
+    List<Projection> projections = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "room")
     List<Seat> seats;
     @UpdateTimestamp
     LocalDateTime updatedAt;

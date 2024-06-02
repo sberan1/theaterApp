@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,8 +31,8 @@ public class Movie {
     LocalDateTime updatedAt;
     @CreationTimestamp
     LocalDateTime createdAt;
-    @OneToMany
-    List<Projection> projections;
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "movie")
+    List<Projection> projections = new ArrayList<>();
     public Movie(String id) {
         this.id = id;
     }

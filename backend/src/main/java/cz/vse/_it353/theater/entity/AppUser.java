@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class AppUser implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
     BigDecimal balance;
-    @OneToMany
-    List<Reservation> reservations;
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    List<Reservation> reservations = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
