@@ -31,7 +31,7 @@ public class AppUser implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
     BigDecimal balance;
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user", cascade = CascadeType.ALL)
     @JsonBackReference
     List<Reservation> reservations = new ArrayList<>();
 

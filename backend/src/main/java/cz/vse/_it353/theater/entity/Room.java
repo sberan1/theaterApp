@@ -24,14 +24,14 @@ public class Room {
     String id;
     String name;
     Integer capacity;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "branch_id")
     @JsonManagedReference
     Branch branch;
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "room")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "room", cascade = CascadeType.ALL)
     @JsonBackReference
     List<Projection> projections = new ArrayList<>();
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "room")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "room", cascade = CascadeType.ALL)
     @JsonBackReference
     List<Seat> seats;
     @UpdateTimestamp

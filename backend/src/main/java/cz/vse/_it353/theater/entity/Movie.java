@@ -33,7 +33,7 @@ public class Movie {
     LocalDateTime updatedAt;
     @CreationTimestamp
     LocalDateTime createdAt;
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "movie")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "movie", cascade = CascadeType.ALL)
     @JsonBackReference
     List<Projection> projections = new ArrayList<>();
     public Movie(String id) {

@@ -25,11 +25,11 @@ import java.util.List;
 public class Reservation {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @JsonManagedReference
     AppUser user;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "projection_id")
     @JsonManagedReference
     Projection projection;

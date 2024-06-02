@@ -25,7 +25,7 @@ public class Branch {
     @Column(unique = true)
     String name;
     String address;
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "branch")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "branch", cascade = CascadeType.ALL)
     @JsonBackReference
     List<Room> rooms = new ArrayList<>();
     @UpdateTimestamp
