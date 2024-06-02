@@ -22,8 +22,8 @@ public class Seat {
     String id;
     @ManyToOne
     Room room;
-    Integer RoomRow;
-    Integer RoomColumn;
+    String RoomRow;
+    Integer SeatNumber;
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp
