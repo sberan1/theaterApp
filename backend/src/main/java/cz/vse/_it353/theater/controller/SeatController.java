@@ -22,4 +22,9 @@ public class SeatController {
     ) {
         return ResponseEntity.ok(seatService.addRow(row, numberOfSeats, roomId));
     }
+
+    @GetMapping("/seats")
+    public ResponseEntity<List<Seat>> getSeats(@RequestParam String roomId) {
+        return ResponseEntity.ok(seatService.findByRoomId(roomId));
+    }
 }

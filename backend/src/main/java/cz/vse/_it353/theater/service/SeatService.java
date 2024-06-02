@@ -25,4 +25,8 @@ public class SeatService {
         }
         return seatRepository.findByRoomId(roomId);
     }
+
+    public List<Seat> findByRoomId(String roomId) {
+        return seatRepository.findByRoomId(roomId);
+    }
 }
