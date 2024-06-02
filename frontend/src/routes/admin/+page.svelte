@@ -55,6 +55,7 @@ function prevPage() {
 		<button class="btn btn-outline-primary m-2" on:click={() => goto('/admin/movie')}>Přidat film</button>
 		<button class="btn btn-outline-primary m-2" on:click={() => goto('/admin/price')}>Přidat cenu</button>
 		<button class="btn btn-outline-primary m-2" on:click={() => goto('/admin/projection')}>Přidat projekci</button>
+		<button class="btn btn-outline-primary m-2" on:click={() => goto('/admin/seats')}>Přidat sedacky</button>
 	</nav>
 </header>
 

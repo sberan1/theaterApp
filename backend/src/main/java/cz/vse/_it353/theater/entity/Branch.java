@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,8 +23,8 @@ public class Branch {
     @Column(unique = true)
     String name;
     String address;
-    @OneToMany
-    List<Room> rooms;
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "branch")
+    List<Room> rooms = new ArrayList<>();
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp

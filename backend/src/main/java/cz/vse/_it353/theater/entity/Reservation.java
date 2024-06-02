@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,11 +24,18 @@ public class Reservation {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     @ManyToOne
+    @JoinColumn(name = "user_id")
     AppUser user;
     @ManyToOne
+    @JoinColumn(name = "projection_id")
     Projection projection;
     @ManyToMany
-    List<Seat> seats;
+    @JoinTable(
+            name = "reservation_seats",
+            joinColumns = @JoinColumn(name = "reservation_id"),
+            inverseJoinColumns = @JoinColumn(name = "seats_id")
+    )
+    List<Seat> seats = new ArrayList<>();
     boolean paid;
     @Min(1)
     @Max(100)

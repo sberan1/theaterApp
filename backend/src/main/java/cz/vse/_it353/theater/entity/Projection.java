@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,13 +22,16 @@ public class Projection {
     String id;
     LocalDateTime startTime;
     @ManyToOne
+    @JoinColumn(name = "price_type_id")
     Price priceType;
     @ManyToOne
+    @JoinColumn(name = "movie_id")
     Movie movie;
     @ManyToOne
+    @JoinColumn(name = "room_id")
     Room room;
-    @OneToMany
-    List<Reservation> reservations;
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "projection")
+    List<Reservation> reservations = new ArrayList<>();
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp

@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,11 +24,12 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     @ManyToOne
+    @JoinColumn(name = "room_id")
     Room room;
     String roomRow;
     Integer seatNumber;
-    @ManyToMany
-    List<Reservation> reservation;
+    @ManyToMany(mappedBy = "seats")
+    List<Reservation> reservations = new ArrayList<>();
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp
