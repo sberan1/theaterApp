@@ -48,7 +48,8 @@ public class SecurityConfig {
                                         "/projection",
                                         "/projections",
                                         "/prices",
-                                        "/branches")
+                                        "/branches",
+                                        "/health-check")
                                 .permitAll()
                                 .requestMatchers("/admin/**", "/user/**").hasAuthority("ADMIN")
                                 .requestMatchers("/user/**").hasAuthority("USER")
