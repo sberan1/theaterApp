@@ -1,6 +1,7 @@
 <script>
 	import axiosInstance from '$lib/axios.instance.js';
 	import { onMount } from 'svelte';
+	import SeatGrid from '$lib/components/SeatGrid.svelte';
 
 	let seats = [];
 	let branches = [];
@@ -9,16 +10,20 @@
 	let newSeats = '';
 	let selectedBranch = '';
 	let selectedRoom = '';
-	let allSelected = false;
 	let showDialog = false;
+
+
 
 const seatPlan = async () => {
 	const response = await axiosInstance.get(`/seats?roomId=${selectedRoom}`);
 	seats = response.data;
-	console.log(seats);
-	};
+};
 
 	const addSeats = async () => {
+		if (selectedBranch === '' || selectedRoom === '') {
+			showDialog = true;
+			return;
+		}
 		const response = await axiosInstance.post(`/admin/addRow?row=${newRow}&numberOfSeats=${newSeats}&roomId=${selectedRoom}`);
 		seats = response.data;
 		newRow = '';
@@ -39,8 +44,9 @@ const seatPlan = async () => {
 		loadRooms();
 	};
 
-	const handleRoomChange = () => {
-	seatPlan()
+	const handleRoomChange = async () => {
+		await seatPlan()
+		console.log(groupedSeats);
 	};
 </script>
 
@@ -78,17 +84,13 @@ const seatPlan = async () => {
 		<button type="submit" class="btn btn-primary">Přidat sedadla</button>
 	</form>
 
-	{#each seats as seat (seat.id)}
-		<div class="seat">
-			<p>Řada: {seat.roomRow}</p>
-			<p>Počet sedadel: {seat.seatNumber}</p>
-		</div>
-	{/each}
+	<SeatGrid {seats} />
 
-	{#if showDialog==true}
+	{#if showDialog===true}
 		<div class="alert alert-danger mt-2" role="alert">
 			Je potreba vybrat pobočku a místnost
 		</div>
 	{/if}
-
 </div>
+
+

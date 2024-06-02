@@ -27,6 +27,6 @@ public class SeatService {
     }
 
     public List<Seat> findByRoomId(String roomId) {
-        return seatRepository.findByRoomId(roomId);
+        return seatRepository.findByRoom_IdOrderByRoomRowAscSeatNumberAsc(roomId);
     }
 }

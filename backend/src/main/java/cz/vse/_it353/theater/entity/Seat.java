@@ -16,14 +16,15 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"room_id", "room_row", "seat_number"}))
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     @ManyToOne
     Room room;
-    String RoomRow;
-    Integer SeatNumber;
+    String roomRow;
+    Integer seatNumber;
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp
