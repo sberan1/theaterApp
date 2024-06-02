@@ -4,6 +4,7 @@
 	import Cookies from 'js-cookie';
 	import { writable } from 'svelte/store';
 	import { goto } from '$app/navigation';
+	import ProjectionTable from '$lib/components/ProjectionTable.svelte';
 
 	let reservations = [];
 	let selectedReservation = null;
@@ -70,30 +71,18 @@
 	{#if reservations.length === 0}
 		<p>Nemáte žádné rezervace.</p>
 	{:else}
-		<table class="table">
-			<thead>
-			<tr>
-				<th>Film</th>
-				<th>Čas</th>
-				<th>Zaplaceno</th>
-				<th>Sleva</th>
-				<th>Akce</th>
-			</tr>
-			</thead>
-			<tbody>
-			{#each reservations as reservation}
-				<tr>
-					<td>{reservation.projection.movie ? reservation.projection.movie.title : 'Neznámý film'}</td>
-					<td>{new Date(reservation.projection.startTime).toLocaleString()}</td>
-					<td>{reservation.paid ? 'Ano' : 'Ne'}</td>
-					<td>{reservation.discount}%</td>
-					<td>
-						<button class="btn btn-secondary" on:click={() => handleEdit(reservation)}>Upravit</button>
-					</td>
-				</tr>
-			{/each}
-			</tbody>
-		</table>
+		<ProjectionTable
+			projections={reservations.map(reservation => ({
+        ...reservation.projection,
+        id: reservation.id,
+        paid: reservation.paid,
+        discount: reservation.discount
+      }))}
+			handleEdit={handleEdit}
+			handleDelete={handleDelete}
+			changeSort={changeSort}
+			sortBy={sortBy}
+		/>
 	{/if}
 	{#if $showEditForm}
 		<div class="edit-form mt-4">

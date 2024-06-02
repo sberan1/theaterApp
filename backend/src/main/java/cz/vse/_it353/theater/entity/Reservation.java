@@ -46,4 +46,7 @@ public class Reservation {
     LocalDateTime updatedAt;
     @CreationTimestamp
     LocalDateTime createdAt;
+        public void addSeat(Seat seat) {
+            seats.add(seat);
+        }
 }

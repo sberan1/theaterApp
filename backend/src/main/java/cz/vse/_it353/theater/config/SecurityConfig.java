@@ -51,8 +51,8 @@ public class SecurityConfig {
                                         "/branches",
                                         "/health-check")
                                 .permitAll()
-                                .requestMatchers("/admin/**", "/user/**").hasAuthority("ADMIN")
-                                .requestMatchers("/user/**").hasAuthority("USER")
+                                .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailService)

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -46,5 +47,9 @@ public class ProjectionService {
         projection.setRoom(roomRepository.findById(projectionDto.getRoomId()).orElseThrow());
         projection.setPriceType(priceRepository.findById(projectionDto.getPriceTypeId()).orElseThrow());
         return projectionRepository.save(projection);
+    }
+
+    public Optional<Projection> findById(String id) {
+        return projectionRepository.findById(id);
     }
 }
