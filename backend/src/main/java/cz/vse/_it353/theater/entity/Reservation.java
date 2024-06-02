@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -35,4 +36,9 @@ public class Reservation {
     LocalDateTime updatedAt;
     @CreationTimestamp
     LocalDateTime createdAt;
+    @ManyToMany
+    private List<Seat> seats;
+    public void addSeat(Seat seat) {
+        seats.add(seat);
+    }
 }

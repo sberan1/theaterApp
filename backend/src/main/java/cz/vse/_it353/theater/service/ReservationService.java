@@ -7,6 +7,7 @@ import cz.vse._it353.theater.entity.Reservation;
 import cz.vse._it353.theater.repository.AppUserRepository;
 import cz.vse._it353.theater.repository.ProjectionRepository;
 import cz.vse._it353.theater.repository.ReservationRepository;
+import cz.vse._it353.theater.repository.SeatRepository;
 import jakarta.persistence.OptimisticLockException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ProjectionRepository projectionRepository;
     private final AppUserRepository appUserRepository;
+    private final SeatRepository seatRepository;
 
     @Transactional
     public Reservation createReservation(ReservationDto reservationDto) {
@@ -31,6 +33,9 @@ public class ReservationService {
         Reservation reservation = new Reservation();
         reservation.setUser(user);
         reservation.setProjection(projection);
+        for(String seat : reservationDto.getSeatsId()) {
+            reservation.addSeat(seatRepository.findById(seat).orElseThrow());
+        }
         reservation.setPaid(reservationDto.isPaid());
         reservation.setDiscount(reservationDto.getDiscount());
 
@@ -43,5 +48,4 @@ public class ReservationService {
     public List<Reservation> findByUsername(String username) {
         return reservationRepository.findAllByUserUsername(username);
     }
-
 }
