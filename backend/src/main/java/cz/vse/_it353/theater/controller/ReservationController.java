@@ -30,4 +30,14 @@ public class ReservationController {
         List<Reservation> reservations = reservationService.findByUsername(username);
         return ResponseEntity.ok(reservations);
     }
+    @PutMapping("/reservations/{id}")
+    public ResponseEntity<Reservation> updateReservationDetails(@PathVariable String id, @RequestBody ReservationDto reservationDto) {
+        Reservation updatedReservation = reservationService.updateReservation(id, reservationDto);
+        return ResponseEntity.ok(updatedReservation);
+    }
+    @DeleteMapping("reservations/{id}")
+    public ResponseEntity<HttpStatus> deleteReservation(@PathVariable String id) {
+        reservationService.deleteReservation(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -53,9 +53,7 @@
 	const loadSeats = async () => {
 		try {
 			if (selectedProjection) {
-
 				const rep = await axiosInstance.get(`/user/projection/${selectedProjection}`);
-
 				console.log(rep);
 				const response = await axiosInstance.get('/seats', {
 					params: { roomId: rep.data.room.id }
@@ -77,14 +75,11 @@
 				projectionId: selectedProjection,
 				paid: isPaid,
 				discount,
-				seats: $selectedSeats
+				seats: $selectedSeats.map(seat => seat.id)
 			};
+			console.log(reservationData);
 
-			const response = await axiosInstance.post('/reservation', reservationData, {
-				headers: {
-					'Authorization': `Bearer ${token}`
-				}
-			});
+			const response = await axiosInstance.post('/reservation', reservationData);
 			console.log('Reservation created:', response.data);
 			goto('/user/account');
 		} catch (error) {
@@ -152,7 +147,7 @@
 			{/each}
 		</select>
 	</div>
-	<SeatGrid {seats} />
+	<SeatGrid {seats} bind:selectedSeats={$selectedSeats} />
 	<form on:submit|preventDefault={createReservation}>
 		<div class="form-group">
 			<label for="isPaid">Zaplaceno:</label>

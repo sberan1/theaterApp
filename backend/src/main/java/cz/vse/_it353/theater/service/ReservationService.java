@@ -4,6 +4,7 @@ import cz.vse._it353.theater.dto.ReservationDto;
 import cz.vse._it353.theater.entity.AppUser;
 import cz.vse._it353.theater.entity.Projection;
 import cz.vse._it353.theater.entity.Reservation;
+import cz.vse._it353.theater.entity.Seat;
 import cz.vse._it353.theater.repository.AppUserRepository;
 import cz.vse._it353.theater.repository.ProjectionRepository;
 import cz.vse._it353.theater.repository.ReservationRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -33,8 +35,8 @@ public class ReservationService {
         Reservation reservation = new Reservation();
         reservation.setUser(user);
         reservation.setProjection(projection);
-        for(String seat : reservationDto.getSeatsId()) {
-            reservation.addSeat(seatRepository.findById(seat).orElseThrow());
+        for(String seatId : reservationDto.getSeats()) {
+            reservation.addSeat(seatRepository.findById(seatId).orElseThrow());
         }
         reservation.setPaid(reservationDto.isPaid());
         reservation.setDiscount(reservationDto.getDiscount());
@@ -47,5 +49,21 @@ public class ReservationService {
     }
     public List<Reservation> findByUsername(String username) {
         return reservationRepository.findAllByUserUsername(username);
+    }
+    @Transactional
+    public Reservation updateReservation(String id, ReservationDto reservationDto) {
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+        reservation.setPaid(reservationDto.isPaid());
+        reservation.setDiscount(reservationDto.getDiscount());
+        List<Seat> seats = seatRepository.findAllById(reservationDto.getSeats());
+        reservation.setSeats(seats);
+        return reservationRepository.save(reservation);
+    }
+
+    public void deleteReservation(String id) {
+        if (!reservationRepository.existsById(id)) {
+            throw new IllegalArgumentException("Reservation not found");
+        }
+        reservationRepository.deleteById(id);
     }
 }

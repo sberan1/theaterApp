@@ -42,7 +42,7 @@ public class Reservation {
     @JsonManagedReference
     List<Seat> seats = new ArrayList<>();
     boolean paid;
-    @Min(1)
+    @Min(0)
     @Max(100)
     Integer discount;
     @Version
@@ -51,7 +51,7 @@ public class Reservation {
     LocalDateTime updatedAt;
     @CreationTimestamp
     LocalDateTime createdAt;
-        public void addSeat(Seat seat) {
-            seats.add(seat);
-        }
+    public void addSeat(Seat seat) {
+        seats.add(seat);
+    }
 }

@@ -14,5 +14,5 @@ public class ReservationDto {
     private String projectionId;
     private boolean paid;
     private Integer discount;
-    private List<String> seatsId;
+    private List<String> seats;
 }

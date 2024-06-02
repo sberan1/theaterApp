@@ -1,9 +1,18 @@
 <script>
 	import groupBy from 'group-array';
+	export let seats = [];
+	export let selectedSeats = [];
 
-	export let seats;
 	$: groupedSeats = groupBy(seats, 'roomRow');
+	//$: selectedSeats = toggleSeatSelection();
 
+	const toggleSeatSelection = (seat) => {
+		if (selectedSeats.includes(seat)) {
+			selectedSeats = selectedSeats.filter(s => s !== seat);
+		} else {
+			selectedSeats = [...selectedSeats, seat];
+		}
+	};
 </script>
 
 <div class="seat-grid mt-5">
@@ -11,7 +20,12 @@
 		<div class="d-flex direction-row">
 			<div class="row-label">{row}</div>
 			{#each groupedSeats[row] as seat (seat.id)}
-				<div class="seat">{seat.seatNumber}</div>
+				<a
+					class="seat {selectedSeats.includes(seat) ? 'selected' : ''}"
+					on:click={() => toggleSeatSelection(seat)}
+				>
+					{seat.seatNumber}
+				</a>
 			{/each}
 			<div class="row-label">{row}</div>
 			<br>
@@ -36,6 +50,10 @@
         align-items: center;
         justify-content: center;
         border-radius: 4px;
+        cursor: pointer;
+    }
+    .seat.selected {
+        background-color: #4caf50;
     }
     .row-label {
         display: flex;
