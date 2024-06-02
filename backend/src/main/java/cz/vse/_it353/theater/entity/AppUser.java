@@ -1,5 +1,6 @@
 package cz.vse._it353.theater.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +31,8 @@ public class AppUser implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
     BigDecimal balance;
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonBackReference
     List<Reservation> reservations = new ArrayList<>();
 
     @Override

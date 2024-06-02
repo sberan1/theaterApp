@@ -1,5 +1,7 @@
 package cz.vse._it353.theater.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +25,8 @@ public class Branch {
     @Column(unique = true)
     String name;
     String address;
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "branch")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "branch", cascade = CascadeType.ALL)
+    @JsonBackReference
     List<Room> rooms = new ArrayList<>();
     @UpdateTimestamp
     LocalDateTime updatedAt;

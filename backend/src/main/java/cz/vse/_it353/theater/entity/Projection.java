@@ -1,5 +1,7 @@
 package cz.vse._it353.theater.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,16 +23,20 @@ public class Projection {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     LocalDateTime startTime;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "price_type_id")
+    @JsonManagedReference
     Price priceType;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "movie_id")
+    @JsonManagedReference
     Movie movie;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_id")
+    @JsonManagedReference
     Room room;
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "projection")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "projection", cascade = CascadeType.ALL)
+    @JsonBackReference
     List<Reservation> reservations = new ArrayList<>();
     @UpdateTimestamp
     LocalDateTime updatedAt;
