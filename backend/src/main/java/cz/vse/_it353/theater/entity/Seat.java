@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
@@ -16,14 +17,17 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"room_id", "room_row", "seat_number"}))
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     @ManyToOne
     Room room;
-    String RoomRow;
-    Integer SeatNumber;
+    String roomRow;
+    Integer seatNumber;
+    @ManyToMany
+    List<Reservation> reservation;
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp

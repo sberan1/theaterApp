@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, String>{
     List<Seat> findByRoomId(String roomId);
+
+    List<Seat> findByRoom_IdOrderByRoomRowAscSeatNumberAsc(String id);
 }
