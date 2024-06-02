@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
@@ -25,6 +26,8 @@ public class Seat {
     Room room;
     String roomRow;
     Integer seatNumber;
+    @ManyToMany
+    List<Reservation> reservation;
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp
