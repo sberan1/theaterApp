@@ -26,7 +26,7 @@
 				goto('/admin');
 			},1500);
 		} catch (error) {
-			console.error('An error occurred:', error);
+			alert('Chyba pri vytvareni pobocky!');
 		}
 	}
 </script>
@@ -53,7 +53,7 @@
 </form>
 
 	{#if showSuccessDialog}
-		<div class="success-dialog">
+		<div class="alert alert-success mt-2" role="alert">
 			Pobocka vytvorena uspesne <br>
 			Presmerovavam do administrace...
 		</div>

@@ -1,6 +1,7 @@
 package cz.vse._it353.theater.service;
 
 import cz.vse._it353.theater.entity.Price;
+import cz.vse._it353.theater.repository.PriceTypeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

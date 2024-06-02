@@ -51,7 +51,8 @@
 				goto('/admin');
 			}, 1500);
 		} catch (error) {
-			console.error('An error occurred:', error);
+			alert('Chyba pri vytvareni promitani!');
+			//console.error('An error occurred:', error);
 		}
 	}
 </script>
@@ -113,7 +114,7 @@
 	</form>
 
 	{#if showModal}
-		<div class="success-dialog">
+		<div class="alert alert-success mt-2" role="alert">
 		  Promitani vytvoreno uspesne <br>
 			Presmerovavam do administrace...
 		</div>

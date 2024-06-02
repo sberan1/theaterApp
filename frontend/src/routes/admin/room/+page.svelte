@@ -33,16 +33,16 @@
 			setTimeout(() => {
 				showModal = false;
 				goto('/admin');
-			}, 1500);
+			}, 1000);
 		} catch (error) {
-			console.error('An error occurred:', error);
+			alert('chyba pri vytvareni kinosalu');
 		}
 	}
 </script>
 
 <header>
 	<nav>
-		<button on:click={() => goto('/admin')}>Vrať se zpět</button>
+		<button on:click={() => goto('/admin')}> Vrať se zpět</button>
 	</nav>
 </header>
 <div class="container">
@@ -72,7 +72,7 @@
 	</form>
 
 	{#if showModal}
-		<div class="success-dialog">
+		<div class="alert alert-success mt-2" role="alert">
 			Sal vytvoren uspesne <br>
 			Presmerovavam do administrace...
 		</div>
