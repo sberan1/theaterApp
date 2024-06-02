@@ -10,9 +10,9 @@
 	let results = [];
 	let movies = [];
 	let branches = [];
-	let loading = writable(false); // Stav načítání
-	let username = ''; // Ukládá uživatelské jméno
-	let loggedIn = writable(false); // Stav přihlášení
+	let loading = writable(false);
+	let username = '';
+	let loggedIn = writable(false);
 
 	const loadMovies = async () => {
 		try {
@@ -36,7 +36,7 @@
 
 	const fetchProjections = async () => {
 		try {
-			loading.set(true); // Nastavení stavu načítání na true
+			loading.set(true);
 			const response = await axiosInstance.get('/projections', {
 				params: {
 					filterType: filterType,
@@ -48,7 +48,7 @@
 		} catch (error) {
 			console.error('Error loading projections:', error);
 		} finally {
-			loading.set(false); // Nastavení stavu načítání na false
+			loading.set(false);
 		}
 	};
 
@@ -72,10 +72,10 @@
 	};
 
 	const logout = () => {
-		Cookies.remove('token'); // Odstranění tokenu
+		Cookies.remove('token');
 		loggedIn.set(false);
 		username = '';
-		goto('/login'); // Přesměrování na přihlašovací stránku
+		goto('/login');
 	};
 
 	async function parseJwt(token) {
@@ -104,12 +104,11 @@
 						<i class="fas fa-user-circle"></i> {username}
 					</span>
 					<button class="btn btn-danger mr-2" on:click={logout}>Odhlásit se</button>
+					<button class="btn btn-info mr-2" on:click={() => goto('/user/account')}>Můj účet</button>
 				{:else}
 					<button class="btn btn-primary mr-2" on:click={() => goto('/login')}>Přihlásit se</button>
 					<button class="btn btn-secondary mr-2" on:click={() => goto('/register')}>Zaregistrovat se</button>
 				{/if}
-				<button class="btn btn-success mr-2" on:click={() => goto('/user/reservation')}>Vytvořit rezervaci</button>
-				<button class="btn btn-info" on:click={() => goto('/user/reservations')}>Moje rezervace</button>
 			</div>
 		</div>
 	</nav>

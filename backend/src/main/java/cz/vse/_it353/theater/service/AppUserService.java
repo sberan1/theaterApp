@@ -18,4 +18,15 @@ public class AppUserService {
         return appUserRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
+    public AppUser updateUserDetails(String username, AppUser updatedUser) {
+        return appUserRepository.findByUsername(username)
+                .map(user -> {
+                    user.setUsername(updatedUser.getUsername());
+                    user.setPassword(updatedUser.getPassword());
+                    user.setEmail(updatedUser.getEmail());
+                    user.setPhoneNumber(updatedUser.getPhoneNumber());
+                    return appUserRepository.save(user);
+                })
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }

@@ -1,7 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { writable } from 'svelte/store';
 	import axiosInstance from '$lib/axios.instance.js';
 	import Cookies from 'js-cookie';
 
@@ -9,18 +8,14 @@
 	let selectedProjection = '';
 	let isPaid = false;
 	let discount = 0;
-	let loading = writable(false); // Stav načítání
 
 	const loadProjections = async () => {
 		try {
-			loading.set(true); // Načítání true
 			const response = await axiosInstance.get('/projections');
 			projections = response.data;
 			console.log('Projections loaded:', projections);
 		} catch (error) {
 			console.error('Error loading projections:', error);
-		} finally {
-			loading.set(false); // Načítání false
 		}
 	};
 
@@ -42,7 +37,7 @@
 				}
 			});
 			console.log('Reservation created:', response.data);
-			goto('/');
+			goto('/user/account');
 		} catch (error) {
 			if (error.response && error.response.status === 409) {
 				alert('Projekce byla aktualizována jinou transakcí. Prosím, obnovte stránku a zkuste to znovu.');
@@ -68,7 +63,7 @@
 <header>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<div class="container">
-			<button class="btn btn-primary mr-2" on:click={() => goto('/')}>Vrať se zpět</button>
+			<button class="btn btn-primary mr-2" on:click={() => goto('/user/account')}>Vrať se zpět</button>
 		</div>
 	</nav>
 </header>
@@ -104,3 +99,16 @@
 		<button type="submit" class="btn btn-success">Vytvořit rezervaci</button>
 	</form>
 </div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
+    .mt-4 {
+        margin-top: 1.5rem;
+    }
+    .btn {
+        margin-top: 1rem;
+    }
+</style>
