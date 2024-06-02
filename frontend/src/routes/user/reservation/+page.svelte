@@ -1,6 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { writable } from 'svelte/store';
 	import axiosInstance from '$lib/axios.instance.js';
 	import Cookies from 'js-cookie';
 
@@ -8,14 +9,18 @@
 	let selectedProjection = '';
 	let isPaid = false;
 	let discount = 0;
+	let loading = writable(false); // Stav načítání
 
 	const loadProjections = async () => {
 		try {
+			loading.set(true); // Načítání true
 			const response = await axiosInstance.get('/projections');
 			projections = response.data;
 			console.log('Projections loaded:', projections);
 		} catch (error) {
 			console.error('Error loading projections:', error);
+		} finally {
+			loading.set(false); // Načítání false
 		}
 	};
 
@@ -25,7 +30,7 @@
 			const user = await parseJwt(token);
 
 			const reservationData = {
-				username: user.sub,  // Use username from token
+				username: user.sub,
 				projectionId: selectedProjection,
 				paid: isPaid,
 				discount
@@ -40,7 +45,7 @@
 			goto('/');
 		} catch (error) {
 			if (error.response && error.response.status === 409) {
-				alert('The projection has been updated by another transaction. Please refresh and try again.');
+				alert('Projekce byla aktualizována jinou transakcí. Prosím, obnovte stránku a zkuste to znovu.');
 			} else {
 				console.error('Error creating reservation:', error);
 			}
@@ -61,39 +66,41 @@
 </script>
 
 <header>
-	<nav>
-		<button on:click={() => goto('/')}>Vrať se zpět</button>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container">
+			<button class="btn btn-primary mr-2" on:click={() => goto('/')}>Vrať se zpět</button>
+		</div>
 	</nav>
 </header>
 
-<div>
+<div class="container mt-4">
 	<h3>Vytvořit rezervaci</h3>
 	<form on:submit|preventDefault={createReservation}>
-		<label>
-			Projekce:
-			<select bind:value={selectedProjection}>
+		<div class="form-group">
+			<label for="projection">Projekce:</label>
+			<select id="projection" class="form-control" bind:value={selectedProjection}>
 				<option value="">--Vyberte projekci--</option>
 				{#each projections as projection}
 					{#if projection.movie && projection.movie.title}
 						<option value={projection.id}>
-							{projection.movie.title} - {projection.startTime}
+							{projection.movie.title} - {new Date(projection.startTime).toLocaleString()}
 						</option>
 					{:else}
 						<option value={projection.id}>
-							Neznámý film - {projection.startTime}
+							Neznámý film - {new Date(projection.startTime).toLocaleString()}
 						</option>
 					{/if}
 				{/each}
 			</select>
-		</label>
-		<label>
-			Zaplaceno:
-			<input type="checkbox" bind:checked={isPaid} />
-		</label>
-		<label>
-			Sleva:
-			<input type="number" min="0" max="100" bind:value={discount} />
-		</label>
-		<button type="submit">Vytvořit rezervaci</button>
+		</div>
+		<div class="form-group">
+			<label for="isPaid">Zaplaceno:</label>
+			<input id="isPaid" type="checkbox" bind:checked={isPaid} />
+		</div>
+		<div class="form-group">
+			<label for="discount">Sleva:</label>
+			<input id="discount" type="number" min="0" max="100" bind:value={discount} class="form-control" />
+		</div>
+		<button type="submit" class="btn btn-success">Vytvořit rezervaci</button>
 	</form>
 </div>

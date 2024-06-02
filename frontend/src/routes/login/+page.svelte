@@ -42,7 +42,14 @@
 	});
 </script>
 
-<button on:click={() => goto('/')}>Vrať se zpět</button>
+<header>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container">
+			<button class="btn btn-primary mr-2" on:click={() => goto('/')}>Vrať se zpět</button>
+		</div>
+	</nav>
+</header>
+
 <div class="container">
 <h1>Přihlášení</h1>
 <form on:submit|preventDefault={handleSubmit}>
