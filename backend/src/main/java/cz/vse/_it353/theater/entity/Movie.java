@@ -1,5 +1,7 @@
 package cz.vse._it353.theater.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,7 @@ public class Movie {
     @CreationTimestamp
     LocalDateTime createdAt;
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "movie")
+    @JsonBackReference
     List<Projection> projections = new ArrayList<>();
     public Movie(String id) {
         this.id = id;

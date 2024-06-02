@@ -1,5 +1,6 @@
 package cz.vse._it353.theater.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,10 +26,12 @@ public class Seat {
     String id;
     @ManyToOne
     @JoinColumn(name = "room_id")
+    @JsonBackReference
     Room room;
     String roomRow;
     Integer seatNumber;
-    @ManyToMany(mappedBy = "seats")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "seats")
+    @JsonBackReference
     List<Reservation> reservations = new ArrayList<>();
     @UpdateTimestamp
     LocalDateTime updatedAt;

@@ -1,5 +1,7 @@
 package cz.vse._it353.theater.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,14 +25,18 @@ public class Projection {
     LocalDateTime startTime;
     @ManyToOne
     @JoinColumn(name = "price_type_id")
+    @JsonManagedReference
     Price priceType;
     @ManyToOne
     @JoinColumn(name = "movie_id")
+    @JsonManagedReference
     Movie movie;
     @ManyToOne
     @JoinColumn(name = "room_id")
+    @JsonManagedReference
     Room room;
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "projection")
+    @JsonBackReference
     List<Reservation> reservations = new ArrayList<>();
     @UpdateTimestamp
     LocalDateTime updatedAt;

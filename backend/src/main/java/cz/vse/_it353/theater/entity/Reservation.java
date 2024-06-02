@@ -1,5 +1,7 @@
 package cz.vse._it353.theater.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -25,9 +27,11 @@ public class Reservation {
     String id;
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonManagedReference
     AppUser user;
     @ManyToOne
     @JoinColumn(name = "projection_id")
+    @JsonManagedReference
     Projection projection;
     @ManyToMany
     @JoinTable(
@@ -35,6 +39,7 @@ public class Reservation {
             joinColumns = @JoinColumn(name = "reservation_id"),
             inverseJoinColumns = @JoinColumn(name = "seats_id")
     )
+    @JsonManagedReference
     List<Seat> seats = new ArrayList<>();
     boolean paid;
     @Min(1)
