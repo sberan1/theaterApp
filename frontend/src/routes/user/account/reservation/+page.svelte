@@ -75,7 +75,7 @@
 				projectionId: selectedProjection,
 				paid: isPaid,
 				discount,
-				seats: $selectedSeats.map(seat => seat.id)
+				seats: $selectedSeats
 			};
 			console.log(reservationData);
 
