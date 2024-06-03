@@ -10,12 +10,20 @@ import cz.vse._it353.theater.entity.Room;
 
 import java.util.List;
 
+/**
+ * Service class for managing Room entities.
+ */
 @Service
 @AllArgsConstructor
 public class RoomService {
     private final RoomRepository roomRepository;
     private final BranchRepository branchRepository;
 
+    /**
+     * Finds all rooms by branch ID.
+     * @param branchId branch ID
+     * @return a list of rooms
+     */
     public List<Room> findAll(String branchId) {
         if (branchId != null) {
             return roomRepository.findAllByBranchId(branchId);
@@ -23,12 +31,22 @@ public class RoomService {
         return roomRepository.findAll();
     }
 
+    /**
+     * Deletes a room by ID.
+     * @param id room ID
+     * @return an empty room
+     */
     public Room deleteById(String id) {
         Room room = roomRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Room not found"));
         roomRepository.deleteById(id);
         return room;
     }
 
+    /**
+     * Creates new room.
+     * @param room new room DTO
+     * @return newly created room
+     */
     public Room create(CreateRoomDto room) {
         Branch branch = branchRepository.findById(room.getBranchId()).orElseThrow(() -> new IllegalArgumentException("Branch not found"));
         Room roomEntity = new Room();
@@ -38,6 +56,12 @@ public class RoomService {
         return roomRepository.save(roomEntity);
     }
 
+    /**
+     * Updates an existing room.
+     * @param id room ID
+     * @param room new room DTO
+     * @return updated room
+     */
     public Room updateRoom(String id, CreateRoomDto room) {
         Room roomToUpdate = roomRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Room not found"));
         Branch branch = branchRepository.findById(room.getBranchId()).orElseThrow(() -> new IllegalArgumentException("Branch not found"));
@@ -48,6 +72,11 @@ public class RoomService {
         return roomRepository.save(roomToUpdate);
     }
 
+    /**
+     * Finds room by ID.
+     * @param id room ID
+     * @return a single room
+     */
     public Room findById(String id) {
         return roomRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Room not found"));
     }

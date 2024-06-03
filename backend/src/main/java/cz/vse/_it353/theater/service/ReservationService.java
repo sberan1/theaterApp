@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * Service class for managing Reservation entities.
+ */
 @Service
 @AllArgsConstructor
 public class ReservationService {
@@ -25,6 +27,11 @@ public class ReservationService {
     private final AppUserRepository appUserRepository;
     private final SeatRepository seatRepository;
 
+    /**
+     * Creates a reservation.
+     * @param reservationDto new reservation DTO
+     * @return newly created reservation
+     */
     @Transactional
     public Reservation createReservation(ReservationDto reservationDto) {
         AppUser user = appUserRepository.findByUsername(reservationDto.getUsername())
@@ -47,9 +54,22 @@ public class ReservationService {
             throw new IllegalStateException("The projection has been updated by another transaction. Please try again.", e);
         }
     }
+
+    /**
+     * Finds a list of reservations by username.
+     * @param username username
+     * @return a list of reservations
+     */
     public List<Reservation> findByUsername(String username) {
         return reservationRepository.findAllByUserUsername(username);
     }
+
+    /**
+     * Updates an existing reservation.
+     * @param id reservation ID
+     * @param reservationDto new reservation DTO
+     * @return newly updated reservation
+     */
     @Transactional
     public Reservation updateReservation(String id, ReservationDto reservationDto) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
@@ -60,6 +80,10 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
+    /**
+     * Deletes a reservation.
+     * @param id reservation ID
+     */
     public void deleteReservation(String id) {
         if (!reservationRepository.existsById(id)) {
             throw new IllegalArgumentException("Reservation not found");

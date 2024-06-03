@@ -2,9 +2,6 @@ package cz.vse._it353.theater.config;
 
 import cz.vse._it353.theater.filter.JwtFilter;
 import cz.vse._it353.theater.service.UserDetailService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,18 +10,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
-import java.util.Arrays;
-import java.util.List;
-
+/**
+ * Class for ensuring that only authenticated users can use the allowed content
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -32,10 +25,22 @@ public class SecurityConfig {
     private final UserDetailService userDetailService;
     private final JwtFilter jwtFilter;
 
+    /**
+     * Constructor of SecurityConfig
+     * @param userDetailService
+     * @param jwtFilter
+     */
     public SecurityConfig(UserDetailService userDetailService, JwtFilter jwtFilter) {
         this.userDetailService = userDetailService;
         this.jwtFilter = jwtFilter;
     }
+
+    /**
+     * Configures the security filter chain for the application
+     * @param http HttpSecurity configuration object
+     * @return the configured SecurityFilterChain
+     * @throws Exception if there is an error in the security configuration
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
@@ -64,11 +69,21 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * Provides the password encoder bean
+     * @return the password encoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Provides the authetication manager bean
+     * @param config the auth configuration
+     * @return the auth manager
+     * @throws Exception if there is an error retrieving the auth manager
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
