@@ -52,6 +52,8 @@ public class SecurityConfig {
                                         "/health-check")
                                 .permitAll()
                                 .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/reservation").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/reservations/**").hasAnyAuthority("USER", "ADMIN")
                                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()
