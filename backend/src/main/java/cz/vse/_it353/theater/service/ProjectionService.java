@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +29,11 @@ public class ProjectionService {
         Pageable pageable = PageRequest.of(page, limit, Sort.by(sortBy).ascending());
         List<Projection> projections;
         if ("movie".equalsIgnoreCase(filterType)) {
-            projections = projectionRepository.findByMovieId(filterValue, pageable);
+            projections = projectionRepository.findByMovie_IdAndStartTimeGreaterThan(filterValue, LocalDateTime.now(), pageable);
         } else if ("branch".equalsIgnoreCase(filterType)) {
-            projections = projectionRepository.findByRoomBranchId(filterValue, pageable);
+            projections = projectionRepository.findByRoomBranchIdAndStartTimeGreaterThan(filterValue, LocalDateTime.now(), pageable);
         } else {
-            projections = projectionRepository.findAll(pageable).stream().toList();
+            projections = projectionRepository.findByStartTimeGreaterThan(LocalDateTime.now(), pageable).stream().toList();
         }
         return projections;
     }
