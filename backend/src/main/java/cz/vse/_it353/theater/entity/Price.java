@@ -22,6 +22,8 @@ public class Price {
     String id;
     String name;
     BigDecimal value;
+    @Version
+    Long version;
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp

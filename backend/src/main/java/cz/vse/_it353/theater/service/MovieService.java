@@ -3,6 +3,8 @@ package cz.vse._it353.theater.service;
 import cz.vse._it353.theater.dto.CreateMovieDto;
 import cz.vse._it353.theater.entity.Movie;
 import cz.vse._it353.theater.repository.MovieRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +26,9 @@ public class MovieService {
         movie1.setCoverImageUrl(movie.getCoverImageUrl());
         return movieRepository.save(movie1);
     }
-    public List<Movie> findAll() {
-        return movieRepository.findAll();
+    public List<Movie> findAll(Integer page, Integer limit) {
+        Pageable pageable = PageRequest.of(page, limit);
+        return movieRepository.findAll(pageable).stream().toList();
     }
 
     public Movie deleteById(String id) {

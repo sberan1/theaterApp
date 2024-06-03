@@ -4,6 +4,7 @@
 	import AdminPobockaGrid from '$lib/components/AdminPobockaGrid.svelte';
 	import AdminRoomGrid from '$lib/components/AdminRoomGrid.svelte';
 	import AdminMovieGrid from '$lib/components/AdminMovieGrid.svelte';
+	import AdminPriceGrid from '$lib/components/AdminPriceGrid.svelte';
 
 	let option = "Projekce";
 </script>
@@ -39,9 +40,7 @@
 		{:else if option === "Film"}
 	<AdminMovieGrid />
 	{:else if option === "Cena"}
-		<p>TODO</p>
-		{:else}
-		<p>TODO</p>
+ 		<AdminPriceGrid />
 	{/if}
 
 </div>

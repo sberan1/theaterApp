@@ -16,8 +16,11 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping("/movies")
-    public ResponseEntity<List<Movie>> getMovies() {
-        List<Movie> movies = movieService.findAll();
+    public ResponseEntity<List<Movie>> getMovies(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer limit
+    ) {
+        List<Movie> movies = movieService.findAll(page, limit);
         return ResponseEntity.ok(movies);
     }
 

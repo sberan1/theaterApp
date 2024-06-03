@@ -1,13 +1,29 @@
 <script>
 	import axiosInstance from '$lib/axios.instance.js';
+	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	let name = '';
 	let value = '';
-	let showModal = false;
+	let version;
+	let showSuccessDialog = false;
+	let price;
 
-	async function addPriceType(priceType) {
-		const response = await axiosInstance.post('http://localhost:8081/admin/price', priceType);
+	export let priceId = $page.url.searchParams.get('id');
+
+	onMount(async () => {
+		if(priceId){
+			const responsePrice = await axiosInstance.get(`/price/${priceId}`);
+			price = responsePrice.data;
+			name = price.name;
+			value = price.value;
+			version = price.version;
+		}
+	});
+
+	async function createPrice(price) {
+		const response = await axiosInstance.post('/admin/price', price);
 
 		if (response.status !== 200) {
 			throw new Error(`HTTP error! status: ${response.status}`);
@@ -18,15 +34,21 @@
 
 	async function handleSubmit() {
 		try {
-			const priceType = { name, value };
-			await addPriceType(priceType);
-			showModal = true;
+			const priceData = { name, value, version };
+
+			if (priceId) {
+				await axiosInstance.put(`/admin/price/${priceId}`, priceData);
+			} else {
+				await createPrice(priceData);
+			}
+
+			showSuccessDialog = true;
 			setTimeout(() => {
-				showModal = false;
+				showSuccessDialog = false;
 				goto('/admin');
 			}, 1500);
 		} catch (error) {
-			alert('Chyba při přidávání typu ceny!');
+			alert('Chyba pri pridavani ceny');
 		}
 	}
 </script>
@@ -37,7 +59,7 @@
 	</nav>
 </header>
 <div class="container">
-	<h1>Přidat typ ceny</h1>
+	<h1>{priceId ? 'Edit Price' : 'Add Price'}</h1>
 	<form on:submit|preventDefault={handleSubmit}>
 		<div class="form-group">
 			<label for="name">Název:</label>
@@ -49,10 +71,10 @@
 			<input id="value" class="form-control" type="number" min="0" step="0.01" bind:value={value} required />
 		</div>
 
-		<button type="submit" class="btn btn-primary">Přidat typ ceny</button>
+		<button type="submit" class="btn btn-primary">{priceId ? 'Save Changes' : 'Add Price'}</button>
 	</form>
 
-	{#if showModal}
+	{#if showSuccessDialog}
 		<div class="alert alert-success mt-2" role="alert">
 			Typ ceny byl úspěšně přidán <br>
 			Přesměrování do administrace...
