@@ -28,4 +28,14 @@ public class BranchController {
     public ResponseEntity<Branch> addBranch(@RequestBody CreateBranchDto branch) {
         return ResponseEntity.ok(branchService.create(branch));
     }
+
+    @GetMapping("/branch/{id}")
+    public ResponseEntity<Branch> getBranchById(@PathVariable String id) {
+        return ResponseEntity.ok(branchService.findById(id));
+    }
+
+    @PutMapping("/admin/branch/{id}")
+    public ResponseEntity<Branch> updateBranch(@PathVariable String id, @RequestBody CreateBranchDto branch) {
+        return ResponseEntity.ok(branchService.updateBranch(id, branch));
+    }
 }

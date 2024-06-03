@@ -11,4 +11,5 @@ public class CreateRoomDto {
     String name;
     int capacity;
     String branchId;
+    Long version;
 }

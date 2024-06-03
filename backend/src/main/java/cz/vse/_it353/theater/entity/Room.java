@@ -34,6 +34,8 @@ public class Room {
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "room", cascade = CascadeType.ALL)
     @JsonBackReference
     List<Seat> seats;
+    @Version
+    Long version;
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp

@@ -14,6 +14,7 @@ import java.util.List;
 @CrossOrigin
 public class MovieController {
     private final MovieService movieService;
+
     @GetMapping("/movies")
     public ResponseEntity<List<Movie>> getMovies() {
         List<Movie> movies = movieService.findAll();
@@ -23,5 +24,20 @@ public class MovieController {
     @PostMapping("/admin/movie")
     public ResponseEntity<Movie> addMovie(@RequestBody CreateMovieDto movie) {
         return ResponseEntity.ok(movieService.create(movie));
+    }
+
+    @DeleteMapping("/admin/movie/{id}")
+    public ResponseEntity<Movie> deleteMovie(@PathVariable String id) {
+        return ResponseEntity.ok(movieService.deleteById(id));
+    }
+
+    @GetMapping("/movie/{id}")
+    public ResponseEntity<Movie> getMovieById(@PathVariable String id) {
+        return ResponseEntity.ok(movieService.findById(id));
+    }
+
+    @PutMapping("/admin/movie/{id}")
+    public ResponseEntity<Movie> updateMovie(@PathVariable String id, @RequestBody CreateMovieDto movie) {
+        return ResponseEntity.ok(movieService.updateMovie(id, movie));
     }
 }

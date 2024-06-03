@@ -13,7 +13,6 @@
 			await goto("/login");
 		}
 		const some = await parseJwt(token);
-		console.log(some);
 		if (some.role !== 'ADMIN') {
 			await goto("/");
 		}

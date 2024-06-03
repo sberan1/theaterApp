@@ -24,4 +24,16 @@ public class BranchService {
                 .build();
         return branchRepository.save(newBranch);
     }
+
+    public Branch findById(String id) {
+        return branchRepository.findById(id).orElseThrow();
+    }
+
+    public Branch updateBranch(String id, CreateBranchDto branch) {
+        Branch branchToUpdate = branchRepository.findById(id).orElseThrow();
+        branchToUpdate.setName(branch.getName());
+        branchToUpdate.setAddress(branch.getAddress());
+        branchToUpdate.setVersion(branch.getVersion());
+        return branchRepository.save(branchToUpdate);
+    }
 }

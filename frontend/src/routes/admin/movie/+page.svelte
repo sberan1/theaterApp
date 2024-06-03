@@ -1,15 +1,32 @@
 <script>
 	import axiosInstance from '$lib/axios.instance.js';
+	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	let title = '';
 	let durationInMinutes = '';
 	let rating = '';
 	let genre = '';
 	let coverImageUrl = '';
-	let showModal = false;
+	let showSuccessDialog = false;
+	let movie;
 
-	async function addMovie(movie) {
+	export let movieId = $page.url.searchParams.get('id');
+
+	onMount(async () => {
+		if(movieId){
+			const responseMovie = await axiosInstance.get(`http://localhost:8081/movie/${movieId}`);
+			movie = responseMovie.data;
+			title = movie.title;
+			durationInMinutes = movie.durationInMinutes;
+			rating = movie.rating;
+			genre = movie.genre;
+			coverImageUrl = movie.coverImageUrl;
+		}
+	});
+
+	async function createMovie(movie) {
 		const response = await axiosInstance.post('http://localhost:8081/admin/movie', movie);
 
 		if (response.status !== 200) {
@@ -21,11 +38,17 @@
 
 	async function handleSubmit() {
 		try {
-			const movie = { title, durationInMinutes, rating, genre, coverImageUrl };
-			await addMovie(movie);
-			showModal = true;
+			const movieData = { title, durationInMinutes, rating, genre, coverImageUrl };
+
+			if (movieId) {
+				await axiosInstance.put(`http://localhost:8081/admin/movie/${movieId}`, movieData);
+			} else {
+				await createMovie(movieData);
+			}
+
+			showSuccessDialog = true;
 			setTimeout(() => {
-				showModal = false;
+				showSuccessDialog = false;
 				goto('/admin');
 			}, 1500);
 		} catch (error) {
@@ -40,7 +63,7 @@
 	</nav>
 </header>
 <div class="container">
-	<h1>Pridat film</h1>
+	<h1>{movieId ? 'Edit Movie' : 'Add Movie'}</h1>
 	<form on:submit|preventDefault={handleSubmit}>
 		<div class="form-group">
 			<label for="title">Title:</label>
@@ -67,10 +90,10 @@
 			<input id="coverImageUrl" class="form-control" bind:value={coverImageUrl} required />
 		</div>
 
-		<button type="submit" class="btn btn-primary">Pridat film</button>
+		<button type="submit" class="btn btn-primary">{movieId ? 'Save Changes' : 'Add Movie'}</button>
 	</form>
 
-	{#if showModal}
+	{#if showSuccessDialog}
 		<div class="alert alert-success mt-2" role="alert">
 			Film vytvoren uspesne <br>
 			Presmerovavam do administrace...

@@ -27,4 +27,25 @@ public class MovieService {
     public List<Movie> findAll() {
         return movieRepository.findAll();
     }
+
+    public Movie deleteById(String id) {
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Movie not found"));
+        movieRepository.deleteById(id);
+        return movie;
+    }
+
+    public Movie findById(String id) {
+        return movieRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Movie not found"));
+    }
+
+    public Movie updateMovie(String id, CreateMovieDto movie) {
+        Movie movieToUpdate = movieRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Movie not found"));
+        movieToUpdate.setTitle(movie.getTitle());
+        movieToUpdate.setGenre(movie.getGenre());
+        movieToUpdate.setDurationInMinutes(movie.getDurationInMinutes());
+        movieToUpdate.setRating(movie.getRating());
+        movieToUpdate.setCoverImageUrl(movie.getCoverImageUrl());
+        movieToUpdate.setVersion(movie.getVersion());
+        return movieRepository.save(movieToUpdate);
+    }
 }

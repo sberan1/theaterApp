@@ -26,6 +26,8 @@ public class Branch {
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "branch", cascade = CascadeType.ALL)
     @JsonBackReference
     List<Room> rooms = new ArrayList<>();
+    @Version
+    Long version;
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp

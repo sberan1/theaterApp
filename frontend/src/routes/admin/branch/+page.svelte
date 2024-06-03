@@ -1,12 +1,28 @@
 <script xmlns="http://www.w3.org/1999/html">
 	import axiosInstance from '$lib/axios.instance.js';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 
 	let name = '';
 	let address = '';
 	let showSuccessDialog = false;
+	let branch;
+	let version;
 
-	async function createRoom(branch) {
+	onMount(async () => {
+		if(branchId){
+			const responseBranch = await axiosInstance.get(`http://localhost:8081/branch/${branchId}`);
+			branch = responseBranch.data;
+			name = branch.name;
+			address = branch.address;
+			version = branch.version;
+		}
+	});
+
+	export let branchId = $page.url.searchParams.get('id');
+
+	async function createBranch(branch) {
 		const response = await axiosInstance.post('http://localhost:8081/admin/branch', branch);
 
 		if (response.status !== 200) {
@@ -18,8 +34,12 @@
 
 	async function handleSubmit() {
 		try {
-			const branch = { name, address };
-			await createRoom(branch);
+					const branchData = { name, address, version };
+					if (branchId) {
+						await axiosInstance.put(`http://localhost:8081/admin/branch/${branchId}`, branchData);
+					} else {
+						await createBranch(branchData);
+					}
 			showSuccessDialog = true;
 			setTimeout(() => {
 				showSuccessDialog = false;
@@ -37,7 +57,7 @@
 	</nav>
 </header>
 <div class="container">
-	<h1>Vytvorit Pobocku</h1>
+	<h1>{branchId ? 'Edit Branch' : 'Create Branch'}</h1>
 <form on:submit|preventDefault={handleSubmit}>
 	<div class="form-group">
 		<label for="name">Name:</label>
@@ -49,7 +69,7 @@
 		<input id="address" class="form-control" bind:value={address} required />
 	</div>
 
-	<button type="submit" class="btn btn-primary">Create Room</button>
+	<button type="submit" class="btn btn-primary">{branchId ? 'Save Changes' : 'Create Branch'}</button>
 </form>
 
 	{#if showSuccessDialog}

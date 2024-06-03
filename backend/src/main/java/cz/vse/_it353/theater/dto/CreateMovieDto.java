@@ -9,4 +9,5 @@ public class CreateMovieDto {
     private int durationInMinutes;
     private String genre;
     private String rating;
+    private Long version;
 }

@@ -6,4 +6,5 @@ import lombok.Data;
 public class CreateBranchDto {
     public String name;
     public String address;
+    public Long version;
 }
