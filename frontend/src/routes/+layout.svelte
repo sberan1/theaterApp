@@ -53,7 +53,7 @@
 
 	onMount(() => {
 		setInterval(checkConnection, 5000);
-		setInterval(checkLogin, 5000);
+		checkLogin();
 		isLoading = false;
 	});
 </script>

@@ -22,10 +22,6 @@
 		<th on:click={() => changeSort('room.branch.name')}>
 			Branch Name {sortBy === 'room.branch.name' ?  '↓' : ''}
 		</th>
-		{#if $admin === true}
-			<th>Edit</th>
-			<th>Delete</th>
-		{/if}
 	</tr>
 	</thead>
 	<tbody>

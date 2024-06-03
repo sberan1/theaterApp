@@ -1,5 +1,6 @@
 <script>
 	import groupBy from 'group-array';
+	import { onMount } from 'svelte';
 	export let seats = [];
 	export let selectedSeats = [];
 
@@ -13,6 +14,12 @@
 			selectedSeats = [...selectedSeats, seat];
 		}
 	};
+
+	onMount(() => {
+		console.log('seats', seats);
+		console.log('groupedSeats', groupedSeats);
+		console.log('selectedSeats', selectedSeats);
+	});
 </script>
 
 <div class="seat-grid mt-5">
@@ -21,7 +28,7 @@
 			<div class="row-label">{row}</div>
 			{#each groupedSeats[row] as seat (seat.id)}
 				<a
-					class="seat {selectedSeats.includes(seat) ? 'selected' : ''}"
+					class="seat {selectedSeats.includes(seat.id) ? 'selected' : ''}"
 					on:click={() => toggleSeatSelection(seat)}
 				>
 					{seat.seatNumber}
