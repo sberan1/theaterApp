@@ -29,7 +29,7 @@
 			{#each groupedSeats[row] as seat (seat.id)}
 				<a
 					class="seat {selectedSeats.includes(seat.id) ? 'selected' : ''}"
-					on:click={() => toggleSeatSelection(seat)}
+					on:click={() => toggleSeatSelection(seat.id)}
 				>
 					{seat.seatNumber}
 				</a>

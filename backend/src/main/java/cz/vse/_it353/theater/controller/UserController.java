@@ -1,5 +1,6 @@
 package cz.vse._it353.theater.controller;
 
+import cz.vse._it353.theater.dto.AddAmountDto;
 import cz.vse._it353.theater.dto.AppUserNoPassDto;
 import cz.vse._it353.theater.dto.AuthenticationResponse;
 import cz.vse._it353.theater.entity.AppUser;
@@ -32,5 +33,10 @@ public class UserController {
         AppUser user = appUserService.updateUserDetails(username, updatedUser);
         String newToken = jwtService.generateToken(user);
         return ResponseEntity.ok(new AuthenticationResponse(newToken));
+    }
+
+    @PostMapping("/addBalance/{username}")
+    public ResponseEntity<AppUserNoPassDto> addBalance(@PathVariable String username, @RequestBody AddAmountDto amount) {
+        return ResponseEntity.ok(appUserService.addBalance(username, amount));
     }
 }

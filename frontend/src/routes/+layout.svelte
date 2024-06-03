@@ -81,6 +81,7 @@
 					</span>
 						<button class="btn btn-danger mr-2" on:click={logout}>Odhlásit se</button>
 						<button class="btn btn-info mr-2" on:click={() => goto('/user/account')}>Můj účet</button>
+						<button class="btn btn-primary mr-2" on:click={() => goto('/user/credit')}>Pridat kredit</button>
 					{:else}
 						<button class="btn btn-primary mr-2" on:click={() => goto('/login')}>Přihlásit se</button>
 						<button class="btn btn-secondary mr-2" on:click={() => goto('/register')}>Zaregistrovat se</button>

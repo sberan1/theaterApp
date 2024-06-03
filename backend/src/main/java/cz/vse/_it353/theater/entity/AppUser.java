@@ -30,7 +30,7 @@ public class AppUser implements UserDetails {
     Integer phoneNumber;
     @Enumerated(EnumType.STRING)
     Role role;
-    BigDecimal balance;
+    BigDecimal balance = BigDecimal.ZERO;
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "user", cascade = CascadeType.ALL)
     @JsonBackReference
     List<Reservation> reservations = new ArrayList<>();

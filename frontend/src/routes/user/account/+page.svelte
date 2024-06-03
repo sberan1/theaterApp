@@ -8,7 +8,8 @@
 	let userDetails = {
 		username: '',
 		email: '',
-		phoneNumber: ''
+		phoneNumber: '',
+		balance: ''
 	};
 	let userDetailsChanged = {
 		username: '',
@@ -132,6 +133,7 @@
 				<p><strong>Uživatelské jméno:</strong> {userDetails.username}</p>
 				<p><strong>Email:</strong> {userDetails.email}</p>
 				<p><strong>Telefon:</strong> {userDetails.phoneNumber}</p>
+				<p><strong>Zustatek: </strong>{userDetails.balance}</p>
 				<button class="btn btn-primary" on:click={handleEdit}>Upravit</button>
 			{/if}
 		</div>

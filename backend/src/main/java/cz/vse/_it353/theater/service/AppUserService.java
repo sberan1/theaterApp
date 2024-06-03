@@ -1,5 +1,6 @@
 package cz.vse._it353.theater.service;
 
+import cz.vse._it353.theater.dto.AddAmountDto;
 import cz.vse._it353.theater.dto.AppUserNoPassDto;
 import cz.vse._it353.theater.entity.AppUser;
 import cz.vse._it353.theater.repository.AppUserRepository;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -21,11 +23,8 @@ public class AppUserService {
     }
 
     public AppUserNoPassDto findByUsername(String username) {
-        Optional<AppUser> user = appUserRepository.findByUsername(username);
-        if(user.get() == null) {
-            throw new IllegalArgumentException("User not found");
-        }
-        AppUserNoPassDto userNoPass = new AppUserNoPassDto(user.get().getUsername(), user.get().getEmail(), user.get().getPhoneNumber());
+        AppUser user = appUserRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        AppUserNoPassDto userNoPass = new AppUserNoPassDto(user.getUsername(), user.getEmail(), user.getPhoneNumber(), user.getBalance());
         return userNoPass;
     }
     public AppUser updateUserDetails(String username, AppUser updatedUser) {
@@ -44,5 +43,12 @@ public class AppUserService {
     }
     public String generateNewToken(AppUser user) {
         return jwtService.generateToken(user);
+    }
+
+    public AppUserNoPassDto addBalance(String username, AddAmountDto amount) {
+        AppUser user = appUserRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setBalance(user.getBalance().add(BigDecimal.valueOf(amount.getAmount())));
+        appUserRepository.save(user);
+        return new AppUserNoPassDto(user.getUsername(), user.getEmail(), user.getPhoneNumber(), user.getBalance());
     }
 }
