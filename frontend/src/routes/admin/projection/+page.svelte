@@ -2,17 +2,23 @@
 	import axiosInstance from '$lib/axios.instance.js';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
+
+	let version;
 	let startTime = '';
 	let priceType = '';
 	let movie = '';
 	let room = '';
 	let branch = '';
+	let projection;
 	let showModal = false;
 	let branches = [];
 	let rooms = [];
 	let movies = [];
 	let priceTypes = [];
+
+	export let projectionId = $page.url.searchParams.get('id');
 
 
 	onMount(async () => {
@@ -24,6 +30,20 @@
 
 		const responsePriceTypes = await axiosInstance.get('http://localhost:8081/prices');
 		priceTypes = responsePriceTypes.data;
+
+		if(projectionId){
+		const responseProjection = await axiosInstance.get(`/user/projection/${projectionId}` );
+		projection = responseProjection.data;
+		console.log(projection);
+
+		startTime = projection.startTime;
+		priceType = projection.priceType.id;
+		movie = projection.movie.id;
+		branch = projection.room.branch.id;
+		await loadRooms();
+		room = projection.room.id;
+		version = projection.version;
+	}
 	});
 
 	const loadRooms = async () => {
@@ -43,6 +63,16 @@
 
 	async function handleSubmit() {
 		try {
+			if (projectionId) {
+				const projection = { startTime, priceTypeId: priceType, movieId: movie, roomId: room, version: version};
+				await axiosInstance.put(`http://localhost:8081/admin/projection/${ projectionId}`, projection);
+				showModal = true;
+				setTimeout(() => {
+					showModal = false;
+					goto('/admin');
+				}, 1500);
+				return;
+			}
 			const projection = { startTime, priceTypeId: priceType, movieId: movie, roomId: room };
 			await createProjection(projection);
 			showModal = true;
@@ -51,7 +81,8 @@
 				goto('/admin');
 			}, 1500);
 		} catch (error) {
-			console.error('An error occurred:', error);
+			alert('Chyba pri vytvareni promitani, zkus restartovat stranku!');
+			//console.error('An error occurred:', error);
 		}
 	}
 </script>
@@ -108,12 +139,17 @@
 				{/each}
 			</select>
 		</div>
-
+		{#if projectionId}
+			<button type="submit" class="btn btn-primary">Save Changes</button>
+			{:else}
 		<button type="submit" class="btn btn-primary">Create Projection</button>
+		{/if}
+
+
 	</form>
 
 	{#if showModal}
-		<div class="success-dialog">
+		<div class="alert alert-success mt-2" role="alert">
 		  Promitani vytvoreno uspesne <br>
 			Presmerovavam do administrace...
 		</div>

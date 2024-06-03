@@ -1,14 +1,14 @@
 package cz.vse._it353.theater.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,14 +16,18 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Branch {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     @Column(unique = true)
     String name;
     String address;
-    @OneToMany
-    List<Room> rooms;
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "branch", cascade = CascadeType.ALL)
+    @JsonBackReference
+    List<Room> rooms = new ArrayList<>();
+    @Version
+    Long version;
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp

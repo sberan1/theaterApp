@@ -36,24 +36,25 @@ public class SecurityConfig {
         this.userDetailService = userDetailService;
         this.jwtFilter = jwtFilter;
     }
-
-    @Value("${allowed-cors}")
-    public String cors;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req ->req.requestMatchers("/login/**",
-                                        "/register/**",
+                        req ->req.requestMatchers("/login",
+                                        "/register",
                                         "/rooms" ,
                                         "/movies",
                                         "/projection",
                                         "/projections",
-                                        "/prices")
+                                        "/prices",
+                                        "/branches",
+                                        "/health-check")
                                 .permitAll()
-                                .requestMatchers("/admin/**", "/user/**").hasAuthority("ADMIN")
-                                .requestMatchers("/user/**").hasAuthority("USER")
+                                .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/reservation").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/reservations/**").hasAnyAuthority("USER", "ADMIN")
+                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailService)

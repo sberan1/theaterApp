@@ -5,6 +5,7 @@ import cz.vse._it353.theater.entity.Movie;
 import cz.vse._it353.theater.entity.Price;
 import cz.vse._it353.theater.entity.Projection;
 import cz.vse._it353.theater.entity.Room;
+import cz.vse._it353.theater.repository.ProjectionRepository;
 import cz.vse._it353.theater.service.ProjectionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 @CrossOrigin
 public class ProjectionController {
     private final ProjectionService projectionService;
+    private final ProjectionRepository projectionRepository;
 
     @PostMapping("/admin/projection")
     public ResponseEntity<Projection> addProjection(@RequestBody ProjectionDto projectionDto) {
@@ -24,22 +26,31 @@ public class ProjectionController {
     }
     @GetMapping("/projections/{branchId}")
     public ResponseEntity<List<Projection>> getProjectionsByBranch(@PathVariable String branchId) {
-        List<Projection> projections = projectionService.findByBranchId(branchId);
-        return ResponseEntity.ok(projections);
+        return ResponseEntity.ok(projectionService.findByBranchId(branchId));
     }
     @GetMapping("/projections")
     public ResponseEntity<List<Projection>> getProjections(
-            @RequestParam String filterType,
-            @RequestParam String filterValue) {
-        List<Projection> projections;
-        if ("movie".equalsIgnoreCase(filterType)) {
-            projections = projectionService.findByMovieId(filterValue);
-        } else if ("branch".equalsIgnoreCase(filterType)) {
-            projections = projectionService.findByBranchId(filterValue);
-        } else {
-            projections = List.of();
-        }
-        System.out.println("Projections fetched: " + projections);  // Přidejte tento řádek
-        return ResponseEntity.ok(projections);
+            @RequestParam(required = false) String filterType,
+            @RequestParam(required = false) String filterValue,
+            @RequestParam(defaultValue = "startTime") String sortBy,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "20") Integer limit
+    ) {
+        return ResponseEntity.ok(projectionService.findAll(filterType, filterValue, sortBy, page, limit));
+    }
+    @GetMapping("/user/projection/{id}")
+    public ResponseEntity<Projection> getProjectionById(@PathVariable String id) {
+        return ResponseEntity.ok(projectionService.findById(id).orElseThrow());
+    }
+
+    @DeleteMapping("/admin/projection/{id}")
+    public ResponseEntity<Void> deleteProjection(@PathVariable String id) {
+        projectionService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/admin/projection/{id}")
+    public ResponseEntity<List<Projection>> updateProjection(@PathVariable String id, @RequestBody ProjectionDto projectionDto) {
+        return ResponseEntity.ok(projectionService.updateProjection(id, projectionDto));
     }
 }

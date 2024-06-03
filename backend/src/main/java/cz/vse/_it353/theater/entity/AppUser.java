@@ -1,5 +1,6 @@
 package cz.vse._it353.theater.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,9 +30,10 @@ public class AppUser implements UserDetails {
     Integer phoneNumber;
     @Enumerated(EnumType.STRING)
     Role role;
-    BigDecimal balance;
-    @OneToMany
-    List<Reservation> reservations;
+    BigDecimal balance = BigDecimal.ZERO;
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonBackReference
+    List<Reservation> reservations = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

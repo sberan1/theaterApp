@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import Cookies from 'js-cookie';
+	import axiosInstance from '$lib/axios.instance';
 
 	let isLoading = true;
 
@@ -12,12 +13,10 @@
 			await goto("/login");
 		}
 		const some = await parseJwt(token);
-		console.log(some);
 		if (some.role !== 'ADMIN') {
 			await goto("/");
 		}
 		isLoading = false;
-
 	}
 	async function parseJwt (token : string) {
 		const base64Url = token.split('.')[1];

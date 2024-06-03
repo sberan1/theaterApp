@@ -1,6 +1,7 @@
 package cz.vse._it353.theater.service;
 
 import cz.vse._it353.theater.dto.AuthenticationResponse;
+import cz.vse._it353.theater.dto.LoginUserDto;
 import cz.vse._it353.theater.dto.RegisterUserDto;
 import cz.vse._it353.theater.entity.AppUser;
 import cz.vse._it353.theater.entity.Role;
@@ -38,7 +39,7 @@ public class AuthService {
         return new AuthenticationResponse(token);
     }
 
-    public AuthenticationResponse login(AppUser input) {
+    public AuthenticationResponse login(LoginUserDto input) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         input.getUsername(),

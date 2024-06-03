@@ -1,5 +1,7 @@
 package cz.vse._it353.theater.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -10,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,12 +28,16 @@ public class Movie {
     Integer durationInMinutes;
     String rating;
     String genre;
+    String coverImageUrl;
+    @Version
+    Long version;
     @UpdateTimestamp
     LocalDateTime updatedAt;
     @CreationTimestamp
     LocalDateTime createdAt;
-    @OneToMany
-    List<Projection> projections;
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "movie", cascade = CascadeType.ALL)
+    @JsonBackReference
+    List<Projection> projections = new ArrayList<>();
     public Movie(String id) {
         this.id = id;
     }
