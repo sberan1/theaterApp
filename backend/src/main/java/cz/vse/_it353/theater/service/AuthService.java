@@ -12,9 +12,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
-
+/**
+ * Service class for handling authentication and user registration.
+ */
 @AllArgsConstructor
 @Service
 public class AuthService {
@@ -23,10 +23,13 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-
+    /**
+     * Registers a new user.
+     * @param input the registration details
+     * @return an AuthenticationResponse containing the JWT token
+     */
     public AuthenticationResponse signup(RegisterUserDto input) {
-        var user = AppUser
-                .builder()
+        var user = AppUser.builder()
                 .username(input.getUsername())
                 .email(input.getEmail())
                 .phoneNumber(input.getPhoneNumber())
@@ -39,6 +42,11 @@ public class AuthService {
         return new AuthenticationResponse(token);
     }
 
+    /**
+     * Authenticates a user and generates a JWT token.
+     * @param input the login details
+     * @return an AuthenticationResponse containing the JWT token
+     */
     public AuthenticationResponse login(LoginUserDto input) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -46,8 +54,9 @@ public class AuthService {
                         input.getPassword()
                 )
         );
-    AppUser user = userRepository.findByUsername(input.getUsername()).orElseThrow();
-    String token = jwtService.generateToken(user);
-    return new AuthenticationResponse(token);
+        AppUser user = userRepository.findByUsername(input.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
+        String token = jwtService.generateToken(user);
+        return new AuthenticationResponse(token);
     }
 }

@@ -5,8 +5,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
+/**
+ * Repository interface for Price entity.
+ */
 public interface PriceTypeRepository extends JpaRepository<Price, String> {
+    /**
+     * Finds all Price entities with pagination support.
+     * @param pageable the pagination information
+     * @return a paginated list of Price entities
+     */
     Page<Price> findAll(Pageable pageable);
 }

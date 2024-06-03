@@ -58,7 +58,7 @@
 				projectionId: selectedReservation.projection.id,
 				paid: selectedReservation.paid,
 				discount: selectedReservation.discount,
-				seats: selectedReservation.seats.map(seat => seat.id)
+				seats: $selectedSeats
 			};
 			console.log("Zvolené sedačky (seatsId):", $selectedSeats);
 			console.log("Aktualizovaná rezervace:", updatedReservation);

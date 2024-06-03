@@ -14,10 +14,61 @@
 	let selectedSeats = writable([]);
 	let seats = [];
 
+	let movies = [];
+	let branches = [];
+
+	let results = [];
+	let loading = writable(false);
+
 	let filterType = 'movie';
 	let filterValue = '';
 	let filteredProjections = writable([]);
 	let sortBy = 'startTime';
+
+	const handleFilterChange = async () => {
+		if (filterValue) {
+			await fetchProjections();
+		}
+	};
+
+	const loadMovies = async () => {
+		try {
+			const response = await axiosInstance.get('/movies');
+			movies = response.data;
+			console.log('Movies loaded:', movies);
+		} catch (error) {
+			console.error('Error loading movies:', error);
+		}
+	};
+
+	const loadBranches = async () => {
+		try {
+			const response = await axiosInstance.get('/branches');
+			branches = response.data;
+			console.log('Branches loaded:', branches);
+		} catch (error) {
+			console.error('Error loading branches:', error);
+		}
+	};
+
+	const fetchProjections = async () => {
+		try {
+			loading.set(true);
+			const response = await axiosInstance.get('/projections', {
+				params: {
+					filterType: filterType,
+					filterValue: filterValue
+				}
+			});
+			results = response.data;
+			$filteredProjections = results;
+			console.log('Projections loaded:', results);
+		} catch (error) {
+			console.error('Error loading projections:', error);
+		} finally {
+			loading.set(false);
+		}
+	};
 
 	const loadProjections = async () => {
 		try {
@@ -75,7 +126,7 @@
 				projectionId: selectedProjection,
 				paid: isPaid,
 				discount,
-				seats: $selectedSeats.map(seat => seat.id)
+				seats: $selectedSeats
 			};
 			console.log(reservationData);
 
@@ -101,7 +152,11 @@
 		return JSON.parse(jsonPayload);
 	}
 
-	onMount(loadProjections);
+	onMount(() => {
+		loadProjections();
+		loadMovies();
+		loadBranches();
+	});
 </script>
 
 <header>
@@ -121,10 +176,27 @@
 			<option value="branch">Pobočka</option>
 		</select>
 	</div>
-	<div class="form-group">
-		<label for="filterValue">Hodnota filtru:</label>
-		<input id="filterValue" class="form-control" type="text" bind:value={filterValue} on:input={applyFilter} />
-	</div>
+	{#if filterType === 'movie'}
+		<div class="form-group">
+			<label for="filterValueMovie">Vyberte film:</label>
+			<select id="filterValueMovie" class="form-control" bind:value={filterValue} on:change={handleFilterChange}>
+				<option value="">--Vyberte film--</option>
+				{#each movies as movie}
+					<option value={movie.id}>{movie.title}</option>
+				{/each}
+			</select>
+		</div>
+	{:else}
+		<div class="form-group">
+			<label for="filterValueBranch">Vyberte kino:</label>
+			<select id="filterValueBranch" class="form-control" bind:value={filterValue} on:change={handleFilterChange}>
+				<option value="">--Vyberte kino--</option>
+				{#each branches as branch}
+					<option value={branch.id}>{branch.name}</option>
+				{/each}
+			</select>
+		</div>
+	{/if}
 	<ProjectionTable
 		projections={$filteredProjections}
 		changeSort={changeSort}
